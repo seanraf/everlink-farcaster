@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Box } from '@mui/material';
+import { Box } from '../components/Box';
 import Loader from './Loader';
 import ThankYou from './ThankYou';
 
@@ -58,8 +58,14 @@ export default function SuccessCase() {
           {deploymentRecord.taskId ? (
             <ThankYou customURL={customURL} loading={loading} />
           ) : (
-            <Box height={'calc(100vh - 144px)'} display={'flex'} width={'100%'}>
-              <Box m={'auto'}>No Record Found</Box>
+            <Box
+              style={{
+                height: 'calc(100vh - 144px)',
+                display: 'flex',
+                width: '100%',
+              }}
+            >
+              <Box style={{ margin: 'auto' }}>No Record Found</Box>
             </Box>
           )}
         </>

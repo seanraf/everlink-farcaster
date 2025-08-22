@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Box, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
-
+import { useEffect, useRef, useState } from 'react';
+import { Box } from '../components/Box';
 import {
   CrossmintCheckoutProvider,
   CrossmintHostedCheckout,
@@ -10,160 +9,65 @@ import Loader from './Loader';
 import { useNavigate } from 'react-router-dom';
 import type { MinterProps } from '../types';
 
-const styles = {
-  containerBox: {
-    minHeight: 'calc(100vh - 73px)',
-    display: 'flex',
-    backgroundImage: "url('/LandingBackground.png')",
-    backgroundRepeat: 'round',
-    width: '100%',
-  },
-  mainBox: {
-    width: '100%',
-    my: 'auto',
-  },
-  heading: {
-    fontSize: { md: '64px', xs: '32px' },
-    fontWeight: 600,
-    letterSpacing: { md: -3, xs: -1 },
-  },
-  shareToFarcaster: {
-    width: 'fit-content',
-    color: 'primary.main',
-    gap: '8px',
-    mx: 'auto',
-    border: '2px solid #855DCD',
-    borderRadius: '8px',
-    padding: '8px 16px',
-    fontWeight: 'bold',
-  },
-  textBox: {
-    '& .MuiTypography-root': { color: '#23343A' },
-  },
-  linkBox: {
-    display: 'flex',
-    height: { md: '64px', xs: '48px' },
-    alignItems: 'center',
-    marginTop: '16px',
-    bgcolor: 'primary.contrastText',
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-    borderRadius: '8px',
-    my: 3,
-    overFlow: 'hidden',
-  },
-  linkText: {
-    flexGrow: 1,
-    wordBreak: 'break-all',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    filter: 'blur(4px)',
-    userSelect: 'none',
-    px: 1,
-  },
-  iconBox: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRight: '1px solid #EBEBEB',
-    height: '100%',
-    px: { md: 2.2, xs: 1.5 },
-  },
-  previewBox: {
-    width: { md: '90%', sm: '75%', xs: '90%' },
-    display: 'flex',
-  },
-};
-
 export default function Minter({
-  setActiveStep,
   renderThemePreview,
   deploymentTaskId,
   loading,
 }: MinterProps) {
-  const projectId = import.meta.env.VITE_CROSSMINT_PROJECT_ID as string;
-  const collectionId = import.meta.env.VITE_CROSSMINT_COLLECTION_ID as string;
-  const environment = import.meta.env.VITE_CROSSMINT_ENVIRONMENT as string;
-  const theme = useTheme();
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
-
   const crossmintBtnRef = useRef<HTMLDivElement>(null);
+
   return (
-    <Box sx={styles.containerBox} position={'relative'}>
-      {loading && <Loader bgcolor={'#FFFFFFCC'} />}
-      <Grid container width={'90%'} mx={'auto'}>
-        <Grid size={{ md: 7.5, xs: 12 }} display={'flex'}>
-          {' '}
-          <Box sx={styles.mainBox}>
-            <Box sx={styles.textBox}>
-              <Typography sx={styles.heading}>
+    <Box className="min-h-[calc(100vh-152px)] flex bg-[url('/LandingBackground.png')] bg-repeat-round w-full relative">
+      {loading ? (
+        <Loader />
+      ) : (
+        <Box className='flex direction-row-column w-[90%] mx-auto'>
+          <Box className='flex-1 flex flex-col justify-center md:w-[50%]'>
+            <Box className='mb-8'>
+              <h1 className='h1-text font-bold tracking-tight text-[#23343A]'>
                 Your Link is{' '}
-                <Box component={'span'}>
+                <span
+                  className='font-normal h1-text'
+                  style={{ fontFamily: 'Nib_Pro' }}
+                >
                   Ready
-                </Box>{' '}
+                </span>
                 ! 🎉
-              </Typography>
-              <Typography fontSize={{ md: 24, xs: 16 }}>
+              </h1>
+              <p className='md:text-[24px] text-[#23343A] mt-2'>
                 To activate and make your link live forever,
                 <br /> complete your payment now.
-              </Typography>
+              </p>
             </Box>
-            <Box
-              sx={styles.linkBox}
-              width={{ md: '60%', sm: '65%', xs: '100%' }}
-            >
-              <Box sx={styles.iconBox}>
+            <Box className='flex items-center h-12 md:h-16 mt-4 bg-white shadow rounded-lg my-6 overflow-hidden w-full md:w-[60%] sm:w-[65%]'>
+              <Box className='flex items-center justify-center border-r border-[#EBEBEB] h-full px-4'>
                 <img
                   src={'/ChainIcon.svg'}
                   alt='Chain Icon'
-                  width={25.94}
-                  height={25.94}
+                  width={26}
+                  height={26}
                 />
               </Box>
-              <Box flexGrow={1} overflow={'hidden'}>
-                <Typography sx={styles.linkText}>
+              <Box className='flex-grow overflow-hidden px-2'>
+                <span className='block text-ellipsis whitespace-nowrap overflow-hidden blur-sm select-none text-[#23343A]'>
                   https://www.everlink.com/l5TzftrtkA_Nbc1uukUteXLSIgQhcFNZP-Hb4pJBtdg
-                </Typography>
+                </span>
               </Box>
-              <Box
-                m={{
-                  md: '8px 6px',
-                  xs: '6px 2px',
-                }}
-              >
-                <Box
-                  position={'relative'}
-                  bgcolor={'#1ab4a3'}
-                  borderRadius={'8px'}
-                  sx={{
-                    padding: isLargeScreen ? '14px 22px' : '10px 18px',
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      cursor: 'pointer',
-                      fontWeight: 900,
-                      textAlign: 'center',
-                      color: '#FFFFFF',
-                    }}
+              <Box className='mx-2 my-1'>
+                <Box className='relative bg-[#1ab4a3] rounded-lg'>
+                  <span
+                    className='block cursor-pointer font-extrabold text-center text-white px-6 py-3'
                     onClick={() => {
                       const btn =
                         crossmintBtnRef.current?.querySelector('button');
-                      if (btn) {
-                        btn.click();
-                      }
+                      if (btn) btn.click();
                     }}
                   >
                     Mint
-                  </Typography>
+                  </span>
                   <Box
                     ref={crossmintBtnRef}
-                    sx={{
-                      opacity: 0,
-                      position: 'absolute',
-                      pointerEvents: 'none',
-                      width: 0,
-                      height: 0,
-                    }}
+                    className='opacity-0 absolute pointer-events-none w-0 h-0'
                   >
                     <CrossmintCheckoutProvider>
                       <CheckoutWithCallbacks
@@ -175,26 +79,19 @@ export default function Minter({
               </Box>
             </Box>
           </Box>
-        </Grid>
-        <Grid
-          size={{ md: 4.5, xs: 12 }}
-          sx={{
-            display: 'flex',
-            px: { md: 3, xs: 'unset' },
-            py: '74px',
-            justifyContent: { md: 'end', xs: 'center' },
-          }}
-        >
-          <Box sx={styles.previewBox}>{renderThemePreview()}</Box>
-        </Grid>
-      </Grid>
+          <Box className='flex-1 flex justify-center items-center md:w-[50%]'>
+            <Box className='render-theme-minter mb-4 flex md:ml-auto'>
+              {renderThemePreview()}
+            </Box>
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 }
 
 function CheckoutWithCallbacks({ deploymentTaskId }: any) {
   const [showCheckout, setShowCheckout] = useState(true);
-
   const collectionId = import.meta.env.VITE_CROSSMINT_COLLECTION_ID as string;
   const { order } = useCrossmintCheckout();
   const navigate = useNavigate();

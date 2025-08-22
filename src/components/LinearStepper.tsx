@@ -1,86 +1,107 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import StepConnector, {
-  stepConnectorClasses,
-} from '@mui/material/StepConnector';
-import { styled } from '@mui/material/styles';
+import { Box } from './Box';
 
 const steps = ['1', '2', '3'];
+
 const styles = {
   stepperBox: {
-    width: '100%',
-    mx: 'auto',
+    margin: '0 auto',
   },
-  stepLabel: {
-    '& .MuiStepIcon-root': {
-      height: '30px',
-      width: '30px',
-      color: '#EFF0F6',
-      '&.Mui-completed': {
-        color: 'secondary.main',
-      },
-      '&.Mui-active': {
-        color: 'secondary.main',
-      },
-    },
+  stepperContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 0,
+    marginBottom: '8px',
+  },
+  step: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    flexGrow: 0,
+    flexShrink: 0,
+    width: '40px',
+  },
+  stepIcon: {
+    width: '30px',
+    height: '30px',
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '12.89px',
+    fontWeight: 'bold',
+    border: '3px solid',
+    marginBottom: 'auto',
+    backgroundColor: 'red',
+  },
+  stepIconActive: {
+    backgroundColor: '#1AB4A3',
+    borderColor: '#1AB4A3',
+    color: 'white',
+  },
+  stepIconCompleted: {
+    backgroundColor: '#1AB4A3',
+    borderColor: '#1AB4A3',
+    color: 'white',
+  },
+  stepIconInactive: {
+    backgroundColor: 'transparent',
+    borderColor: '#EFF0F6',
+    color: '#6F6C90',
+  },
+  connector: {
+    flex: 1,
+    height: '4.83px',
+    backgroundColor: '#EFF0F6',
+    borderRadius: '32px',
+    margin: '0 4px',
+  },
+  connectorActive: {
+    backgroundColor: '#1AB4A3',
+  },
+  connectorCompleted: {
+    backgroundColor: '#1AB4A3',
   },
 };
+
 export default function LinearStepper({ activeStep }: { activeStep: number }) {
-  const CustomConnector = styled(StepConnector)(({ theme }) => ({
-    [`&.${stepConnectorClasses.alternativeLabel}`]: {
-      top: 13,
-      left: 'calc(-50% + 24px)',
-      right: 'calc(50% + 24px)',
-    },
-    [`&.${stepConnectorClasses.active}`]: {
-      [`& .${stepConnectorClasses.line}`]: {
-        borderColor: '#1AB4A3',
-      },
-    },
-    [`&.${stepConnectorClasses.completed}`]: {
-      [`& .${stepConnectorClasses.line}`]: {
-        borderColor: '#1AB4A3',
-      },
-    },
-    [`& .${stepConnectorClasses.line}`]: {
-      borderColor: '#EFF0F6',
-      borderTopWidth: 3,
-      borderRadius: '32px',
-      borderWidth: '4.83px',
-      ...theme.applyStyles('dark', {
-        borderColor: theme.palette.grey[800],
-      }),
-    },
-  }));
+  const getStepIconStyle = (index: number) => {
+    if (index < activeStep) {
+      return { ...styles.stepIcon, ...styles.stepIconCompleted };
+    } else if (index === activeStep) {
+      return { ...styles.stepIcon, ...styles.stepIconActive };
+    } else {
+      return { ...styles.stepIcon, ...styles.stepIconInactive };
+    }
+  };
+
+  const getConnectorStyle = (index: number) => {
+    if (index < activeStep) {
+      return { ...styles.connector, ...styles.connectorCompleted };
+    } else if (index === activeStep) {
+      return { ...styles.connector, ...styles.connectorActive };
+    } else {
+      return styles.connector;
+    }
+  };
 
   return (
-    <Box sx={styles.stepperBox}>
-      <Stepper
-        activeStep={activeStep}
-        alternativeLabel
-        connector={<CustomConnector />}
-        sx={{
-          padding: 0,
-        }}
-      >
+    <Box style={styles.stepperBox} className='md:w-4/5'>
+      <Box style={styles.stepperContainer}>
         {steps.map((label, index) => (
-          <Step key={label} sx={{ flexGrow: 1, flexBasis: 0 }}>
-            <StepLabel
-              sx={{
-                ...styles.stepLabel,
-                '& .MuiStepIcon-text': {
-                  fill: activeStep === index ? 'primary.main' : '#6F6C90',
-                  fontSize: '12.89px',
-                  fontWeight: 'bold',
-                },
-              }}
-            />
-          </Step>
+          <React.Fragment key={label}>
+            <Box style={styles.step}>
+              <Box style={getStepIconStyle(index)}>
+                {label}
+              </Box>
+            </Box>
+            {index < steps.length - 1 && (
+              <Box style={getConnectorStyle(index)} />
+            )}
+          </React.Fragment>
         ))}
-      </Stepper>
+      </Box>
     </Box>
   );
 }

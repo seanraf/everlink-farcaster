@@ -1,10 +1,7 @@
-import React from 'react';
 import SuccessCase from './view/SuccessCase';
 
 const Success = () => {
-  return (
-    <SuccessCase />
-  );
+  return <SuccessCase />;
 };
 
-export default Success; 
+export default Success;

@@ -1,39 +1,12 @@
-import React from 'react';
 import axios from 'axios';
 import JSZip from 'jszip';
 import Dark from './previews/Dark';
 import Light from './previews/Light';
-import { Box, Button } from '@mui/material';
 import ReactDOMServer from 'react-dom/server';
 import { useAuth } from '@crossmint/client-sdk-react-ui';
 import type { DomainContent, UploaderProps } from '../types';
 import { useFrameContext } from '../providers/FarcasterContextProvider';
-
-const styles = {
-  title: {
-    fontSize: { md: 18, xs: 16 },
-    fontWeight: 700,
-    color: 'text.primary',
-  },
-  tagline: {
-    fontSize: { md: 14, xs: 13 },
-    color: 'secondary.contrastText',
-    fontWeight: 500,
-  },
-  themeName: {
-    fontWeight: 500,
-    mb: 1,
-    fontSize: { md: '16px', xs: '14px' },
-  },
-  buttonsBox: { display: 'flex', gap: 3, mt: 4 },
-  buttons: {
-    flex: 1,
-    borderColor: 'secondary.main',
-    borderRadius: '8px',
-    fontWeight: 'bold',
-    py: { md: 1.75, xs: 1 },
-  },
-};
+import { Box } from '../components/Box';
 
 export default function Uploader({
   setActiveStep,
@@ -48,13 +21,14 @@ export default function Uploader({
   const { user } = useAuth();
   const { context } = useFrameContext();
   const backendBase = import.meta.env.VITE_BACKEND_BASE_URL as string;
-  const everlandHostingBase = import.meta.env.VITE_4EVERLAND_HOSTING_BASE_URL as string;
+  const everlandHostingBase = import.meta.env
+    .VITE_4EVERLAND_HOSTING_BASE_URL as string;
   const everlandTokenId = import.meta.env.VITE_TOKEN_ID as string;
   const everlandProjectId = import.meta.env.VITE_PROJECT_ID as string;
   const frontendBaseUrl = import.meta.env.VITE_FRONTEND_BASE_URL as string;
   const backendBaseUrl = import.meta.env.VITE_BACKEND_BASE_URL as string;
   const shortIoUrl = import.meta.env.VITE_SHORT_IO_BASE_URL as string;
-  const domain = import.meta.env.VITE_DOMAIN as string;
+  const domain = import.meta.env.VITE_DOMAIN_NAME as string;
   const apiKey = import.meta.env.VITE_SHORT_IO_API_KEY as string;
 
   const saveDeploymentData = async (
@@ -239,28 +213,20 @@ export default function Uploader({
   };
 
   return (
-    <Box sx={styles.buttonsBox}>
-      <Button
-        sx={{
-          ...styles.buttons,
-          color: 'secondary.main',
-        }}
-        variant='outlined'
+    <Box className='flex gap-5 mt-3'>
+      <button
+        type='button'
+        className='flex justify-center px-4  py-3 w-full bg-transparent border border-[#1ab4a3] text-[#1ab4a3] rounded-lg font-bold cursor-pointer'
         onClick={handleBack}
       >
         Back
-      </Button>
-      <Button
-        sx={{
-          ...styles.buttons,
-          bgcolor: 'secondary.main',
-          color: 'primary.contrastText',
-        }}
-        variant='outlined'
+      </button>
+      <button
+        className='flex justify-center px-4 py-3 w-full bg-[#1ab4a3] border  border-[#1ab4a3] text-white rounded-lg font-bold cursor-pointer'
         onClick={handleMint}
       >
         Next
-      </Button>
+      </button>
     </Box>
   );
 }

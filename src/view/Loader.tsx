@@ -1,18 +1,9 @@
-import React from 'react';
-import { Box } from '@mui/material';
+import { Box } from '../components/Box';
 
-export default function Loader({ bgcolor = '#FFFFFF' }: { bgcolor?: string }) {
+export default function Loader() {
   return (
-    <Box
-      sx={{
-        width: '100%',
-        height: 'calc(100vh - 72px)',
-        display: 'flex',
-        position: 'absolute',
-        bgcolor: bgcolor,
-      }}
-    >
-      <Box m={'auto'}>
+    <Box className='bg-white h-[calc(100vh-153px)] w-full flex absolute'>
+      <Box className='m-auto'>
         <img
           src={'/loader.gif'}
           alt='Loader'

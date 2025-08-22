@@ -1,18 +1,4 @@
-import { Button } from '@mui/material';
 import { sdk } from '@farcaster/frame-sdk';
-
-const styles = {
-  shareToFarcaster: {
-    width: 'fit-content',
-    color: 'primary.main',
-    gap: '8px',
-    mx: 'auto',
-    border: '2px solid #855DCD',
-    borderRadius: '8px',
-    padding: '8px 16px',
-    fontWeight: 'bold',
-  },
-};
 
 export default function ShareToFarcaster({ customURL }: { customURL: string }) {
   const shareToWarpcast = async () => {
@@ -33,10 +19,10 @@ export default function ShareToFarcaster({ customURL }: { customURL: string }) {
   };
 
   return (
-    <Button
-      variant='outlined'
-      sx={styles.shareToFarcaster}
+    <button
+      className="w-fit text-[#855DCD] gap-2 mx-auto border-2 bg-white border-[#855DCD] rounded-lg px-4 py-2 mt-2 font-bold cursor-pointer flex items-center justify-center"
       onClick={shareToWarpcast}
+      type="button"
     >
       <img
         src={'/FarcasterPurpleLogo.svg'}
@@ -45,6 +31,6 @@ export default function ShareToFarcaster({ customURL }: { customURL: string }) {
         height={24}
       />
       Share To Farcaster Frame
-    </Button>
+    </button>
   );
 }

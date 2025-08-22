@@ -1,77 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import URLButtons from './URLButtons';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Box, Button, InputLabel, TextField, Typography } from '@mui/material';
+import { Box } from '../components/Box';
+import * as Label from '@radix-ui/react-label';
 import { useAuth } from '@crossmint/client-sdk-react-ui';
 import { useFrameContext } from '../providers/FarcasterContextProvider';
 import type { UrlButton, UrlButtonErrors } from '../types';
 
-const styles = {
-  composeLinkList: {
-    fontSize: { sm: '19.33px', xs: '16px' },
-    fontWeight: 'bold',
-    color: 'text.primary',
-  },
-  tagline: {
-    fontSize: { sm: 16, xs: 13 },
-    color: 'secondary.contrastText',
-    fontWeight: 500,
-  },
-  textFieldsBox: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  textFieldsLabel: {
-    color: 'text.secondary',
-    mt: 2,
-    fontWeight: 500,
-    fontSize: { md: 16, xs: 14 },
-  },
-  textFields: {
-    mt: 1,
-    '& .MuiOutlinedInput-root': {
-      borderRadius: '8px',
-      backgroundColor: '#F8F8F8',
-      '& fieldset': {
-        borderColor: '#CBD2E0',
-        borderRadius: '8px',
-      },
-      '&:hover fieldset': {
-        borderColor: '#CBD2E0',
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: '#CBD2E0',
-      },
-    },
-  },
-  seeMoreButton: {
-    mt: 2,
-    mx: 'auto',
-    fontWeight: 'bold',
-    color: 'text.secondary',
-  },
-  dropDownIcon: {
-    height: 30,
-    width: 30,
-    ml: -1,
-  },
-  analyticsTagBox: {
-    mt: 2,
-    flexDirection: 'column',
-    '& .MuiTypography-root': {
-      fontSize: { md: 16, xs: 14 },
-    },
-  },
-  analyticsTagLabel: { display: 'flex', justifyContent: 'space-between' },
-  nextButton: {
-    bgcolor: 'secondary.main',
-    color: 'primary.contrastText',
-    width: '100%',
-    mt: 3,
-  },
-};
-const From = ({
+const Form = ({
   setActiveStep,
   userName,
   setUserName,
@@ -139,7 +74,7 @@ const From = ({
     setUsernameError(validateUsername(value));
   };
 
-  const handleBioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setBio(value);
     setBioError(validateBio(value));
@@ -185,8 +120,8 @@ const From = ({
       url: !button.url
         ? 'Please enter button URL'
         : isValidUrl(button.url)
-          ? ''
-          : 'Please enter a valid button URL',
+        ? ''
+        : 'Please enter a valid button URL',
     }));
 
     updatedErrors.forEach((error: UrlButtonErrors) => {
@@ -208,74 +143,55 @@ const From = ({
 
   return (
     <Box>
-      <Typography sx={styles.composeLinkList}>
+      <Box className='text-xl font-bold text-gray-900 mb-1'>
         Compose Your Link List
-      </Typography>
-      <Typography sx={styles.tagline}>
+      </Box>
+      <Box className='text-base text-gray-500 font-medium mb-4'>
         Add the links you want to share and customize their titles
-      </Typography>
-      <Box
-        component='form'
-        sx={styles.textFieldsBox}
-        noValidate
-        autoComplete='off'
-      >
-        <Box sx={{ ...styles.textFieldsBox, mt: 1 }}>
-          <InputLabel
-            htmlFor='input-with-icon-adornment'
-            sx={styles.textFieldsLabel}
+      </Box>
+      <form className='flex flex-col gap-4' autoComplete='off' noValidate>
+        <Box className='flex flex-col gap-2 mt-1'>
+          <Label.Root
+            htmlFor='username'
+            className='text-gray-600 font-medium text-base mb-1'
           >
             Username
-          </InputLabel>
-          <TextField
-            InputProps={{
-              inputProps: {
-                style: {
-                  padding: '0 10px',
-                  height: '48px',
-                  width: '100%',
-                  backgroundColor: '#F8F8F8',
-                },
-              },
-            }}
-            sx={styles.textFields}
-            fullWidth
-            id='outlined-basic'
-            variant='outlined'
+          </Label.Root>
+          <input
+            id='username'
+            className={`rounded-lg bg-gray-100 border border-gray-300 px-3 h-12 w-full focus:outline-none focus:ring-1 focus:ring-gray-500 ${
+              usernameError ? 'border-red-500' : ''
+            }`}
             value={userName}
             onChange={handleUsernameChange}
-            error={!!usernameError}
-            helperText={usernameError}
+            autoComplete='off'
+            aria-multiline={true}
           />
+          {usernameError && (
+            <Box className='text-xs text-red-500 mt-1'>{usernameError}</Box>
+          )}
         </Box>
-        <Box sx={styles.textFieldsBox}>
-          <InputLabel
-            htmlFor='input-with-icon-adornment'
-            sx={styles.textFieldsLabel}
+        <Box className='flex flex-col gap-2'>
+          <Label.Root
+            htmlFor='bio'
+            className='text-gray-600 font-medium text-base mb-1'
           >
             Bio
-          </InputLabel>
-          <TextField
-            InputProps={{
-              inputProps: {
-                style: {
-                  height: '48px',
-                  width: '100%',
-                  backgroundColor: '#F8F8F8',
-                },
-              },
-            }}
-            sx={styles.textFields}
-            fullWidth
-            multiline
-            rows={2}
-            id='outlined-basic'
-            variant='outlined'
+          </Label.Root>
+          <textarea
+            id='bio'
+            className={`rounded-lg bg-gray-100 border border-gray-300 px-3 w-full hide-scrollbar focus:outline-none focus:ring-1 focus:ring-gray-500 resize-none py-3 ${
+              bioError ? 'border-red-500' : ''
+            }`}
             value={bio}
             onChange={handleBioChange}
-            error={!!bioError}
-            helperText={bioError}
+            rows={1}
+            style={{ overflow: 'auto', minHeight: '88px' }}
+            autoComplete='off'
           />
+          {bioError && (
+            <Box className='text-xs text-red-500 mt-1'>{bioError}</Box>
+          )}
         </Box>
         <URLButtons
           urlButtons={urlButtons}
@@ -283,54 +199,77 @@ const From = ({
           urlButtonErrors={urlButtonErrors}
           setUrlButtonErrors={setUrlButtonErrors}
         />
-        <Button
+        <button
+          type='button'
           onClick={toggleOptionalField}
-          sx={styles.seeMoreButton}
-          endIcon={
-            showOptionalField ? (
-              <ArrowDropUpIcon sx={styles.dropDownIcon} />
-            ) : (
-              <ArrowDropDownIcon sx={styles.dropDownIcon} />
-            )
-          }
+          className='mt-2 mx-auto font-bold border-0 flex items-center gap-1 bg-transparent cursor-pointer'
+          style={{ fontSize: '16px' }}
         >
           See More
-        </Button>
+          <span>
+            {showOptionalField ? (
+              <svg
+                className='w-6 h-6'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M19 15l-7-7-7 7'
+                />
+              </svg>
+            ) : (
+              <svg
+                className='w-6 h-6'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
+            )}
+          </span>
+        </button>
         {showOptionalField && (
-          <Box sx={styles.analyticsTagBox}>
-            <InputLabel htmlFor='optional-field' sx={styles.analyticsTagLabel}>
-              <Typography>Google Analytics Tag</Typography>
-              <Typography color='secondary.contrastText'>
-                Optional Field
-              </Typography>
-            </InputLabel>
-            <TextField
-              InputProps={{
-                inputProps: {
-                  style: {
-                    padding: '3px 5px',
-                    width: '100%',
-                    backgroundColor: '#F8F8F8',
-                  },
-                },
-              }}
-              sx={styles.textFields}
-              fullWidth
-              id='optional-field'
-              variant='outlined'
-              multiline
-              rows={3}
+          <Box className='flex flex-col mt-2'>
+            <Label.Root
+              htmlFor='analytics-tag'
+              className='flex justify-between mb-1'
+            >
+              <span className='font-medium text-gray-600 mb-1'>
+                Google Analytics Tag
+              </span>
+              <span className='text-gray-400 mb-1'>Optional Field</span>
+            </Label.Root>
+            <textarea
+              id='analytics-tag'
+              className={`rounded-lg bg-gray-100 border border-gray-300 px-3 w-full hide-scrollbar focus:outline-none focus:ring-1 focus:ring-gray-500 resize-none py-3`}
               value={analyticsTag}
               onChange={(e) => setAnalyticsTag(e.target.value)}
+              rows={1}
+              style={{ overflow: 'auto', minHeight: '88px' }}
+              autoComplete='off'
             />
           </Box>
         )}
-        <Button sx={styles.nextButton} onClick={handleNextButton}>
+        <button
+          type='button'
+          className='bg-teal-500 text-white w-full mt-3 py-3 border-0 rounded-lg font-semibold hover:bg-teal-600 transition cursor-pointer'
+          onClick={handleNextButton}
+        >
           Next
-        </Button>
-      </Box>
+        </button>
+      </form>
     </Box>
   );
 };
 
-export default From;
+export default Form;

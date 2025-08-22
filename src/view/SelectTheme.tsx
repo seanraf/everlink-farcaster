@@ -1,34 +1,6 @@
-import React from 'react';
-import { Box, Grid, Typography } from '@mui/material';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { CheckCircle } from 'lucide-react';
 import { DarkTheme, LightTheme } from './Themes';
 import type { SelectThemeProps } from '../types';
-
-const styles = {
-  title: {
-    fontSize: { md: 18, xs: 16 },
-    fontWeight: 700,
-    color: 'text.primary',
-  },
-  tagline: {
-    fontSize: { md: 14, xs: 13 },
-    color: 'secondary.contrastText',
-    fontWeight: 500,
-  },
-  themeName: {
-    fontWeight: 500,
-    mb: 1,
-    fontSize: { md: '16px', xs: '14px' },
-  },
-  buttonsBox: { display: 'flex', gap: 3, mt: 4 },
-  buttons: {
-    flex: 1,
-    borderColor: 'secondary.main',
-    borderRadius: '8px',
-    fontWeight: 'bold',
-    py: { md: 1.75, xs: 1 },
-  },
-};
 
 export default function SelectTheme({
   selectedTheme,
@@ -54,49 +26,43 @@ export default function SelectTheme({
   ];
 
   return (
-    <Box>
-      <Typography sx={styles.title}>Choose Your Theme</Typography>
-      <Typography sx={styles.tagline}>
+    <div>
+      <h2 className='text-lg md:text-xl font-bold text-gray-900'>
+        Choose Your Theme
+      </h2>
+      <p className='text-sm md:text-base text-gray-500 font-medium mt-1'>
         Pick a theme to style your page and give it a personal touch
-      </Typography>
-      <Grid container spacing={{ md: 3, xs: 2 }} mt={2}>
+      </p>
+
+      <div className='grid grid-cols-2 gap-4 md:gap-6 mt-4'>
         {themeCards.map((card) => (
-          <Grid size={6} key={card.id}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography sx={styles.themeName}>{card?.themeName}</Typography>
-              <CheckCircleIcon
-                sx={{
-                  color:
-                    selectedTheme === card?.themeName ? '#2A80FF' : '#D9DBE9',
-                }}
+          <div key={card.id} className='space-y-2'>
+            <div className='flex items-center justify-between'>
+              <span className='text-sm md:text-base font-medium'>
+                {card.themeName}
+              </span>
+              <CheckCircle
+                className={`h-5 w-5 ${
+                  selectedTheme === card.themeName
+                    ? 'text-blue-600'
+                    : 'text-gray-300'
+                }`}
               />
-            </Box>
-            <Box
-              sx={{
-                borderRadius: '18px',
-                border: '2px solid transparent',
-                padding:
-                  selectedTheme === card?.themeName
-                    ? { md: 0.75, xs: 0.5 }
-                    : '0px',
-                borderColor:
-                  selectedTheme === card?.themeName ? '#2A80FF' : 'none',
-                '&:hover': {
-                  borderColor: '#2A80FF',
-                  padding: { md: 0.75, xs: 0.5 },
-                  '& .hoverable-button': {
-                    py: { md: 1.75, xs: 0.75 },
-                  },
-                },
-                cursor: 'pointer',
-              }}
-              onClick={() => handleCardClick(card?.themeName)}
+            </div>
+
+            <div
+              onClick={() => handleCardClick(card.themeName)}
+              className={`rounded-2xl border-2 transition-all cursor-pointer ${
+                selectedTheme === card.themeName
+                  ? 'border-blue-600 p-1'
+                  : 'border-transparent'
+              } hover:border-blue-600 hover:p-1`}
             >
-              {card?.theme}
-            </Box>
-          </Grid>
+              {card.theme}
+            </div>
+          </div>
         ))}
-      </Grid>
-    </Box>
+      </div>
+    </div>
   );
 }

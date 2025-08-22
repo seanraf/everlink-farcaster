@@ -1,74 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Player from 'lottie-react';
-import { Box, Button, Tooltip, Typography } from '@mui/material';
+import { Box } from '../components/Box';
+import * as Tooltip from '@radix-ui/react-tooltip';
 import ShareToFarcaster from '../components/ShareToFarcaster';
-
-// Remove next/font/local and next/image imports
-// Use dynamic import for ThankuAnimationData
 import ThankuAnimationData from '../public/ThankuAnimationData.json';
-
-const styles = {
-  containerBox: {
-    height: 'calc(100vh - 196px)',
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundImage: "url('/LandingBackground.png')",
-    backgroundRepeat: 'round',
-  },
-  mainBox: {
-    display: 'flex',
-    width: '90%',
-    mx: 'auto',
-    flexDirection: 'column',
-    my: 'auto',
-  },
-  heading: {
-    fontSize: { md: '64px', xs: '32px' },
-    fontWeight: 600,
-    letterSpacing: { md: -3, xs: -1 },
-  },
-  textBox: {
-    textAlign: 'center',
-    '& .MuiTypography-root': { color: '#23343A' },
-  },
-  linkBox: {
-    display: 'flex',
-    mx: 'auto',
-    height: { md: '64px', xs: '48px' },
-    alignItems: 'center',
-    marginTop: '16px',
-    bgcolor: 'primary.contrastText',
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-    borderRadius: '8px',
-    my: 3,
-    overFlow: 'hidden',
-  },
-  linkText: {
-    flexGrow: 1,
-    wordBreak: 'break-all',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-  },
-  iconBox: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRight: '1px solid #EBEBEB',
-    height: '100%',
-    px: { md: 2.2, xs: 1.5 },
-  },
-  copyButton: {
-    backgroundColor: 'secondary.main',
-    color: 'primary.contrastText',
-    p: { md: '10px 24px', xs: '6px 18px' },
-    fontSize: { md: 16, xs: 14 },
-    mx: { md: 1, xs: 0.5 },
-    borderRadius: '8px',
-    '&:hover': {
-      backgroundColor: 'secondary.main',
-    },
-  },
-};
 
 export default function ThankYou({
   customURL,
@@ -88,44 +23,33 @@ export default function ThankYou({
     }, 1500);
   };
   return (
-    <Box sx={styles.containerBox}>
-      <Box sx={styles.mainBox} width={'100%'}>
-        <Box sx={styles.textBox} position={'relative'} pt={'133px'}>
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              zIndex: -1,
-              mt: 10,
-            }}
-          >
+    <Box className="h-[calc(100vh-152px)] flex justify-center bg-[url('/LandingBackground.png')] bg-repeat-round">
+      <Box className='flex flex-col w-[90%] mx-auto my-auto leading-[1.5]'>
+        <Box className='text-center relative pt-[50px]'>
+          <Box className='absolute top-0 left-0 w-full h-full -z-10 mt-5'>
             <Player
               autoplay
               loop
               animationData={ThankuAnimationData}
-              style={{
-                height: '100%',
-                width: '100%',
-                objectFit: 'cover',
-              }}
+              style={{ height: '100%', width: '100%', objectFit: 'cover' }}
             />
           </Box>
-          <Typography sx={styles.heading}>
-            <Box component={'span'}>
+          <div className='font-bold h1-text md:tracking-[-3px] tracking-[-1px] text-[#23343A]'>
+            <span
+              style={{ fontFamily: 'Nib_Pro', fontWeight: 300 }}
+              className='h1-text'
+            >
               ThankYou
-            </Box>{' '}
+            </span>{' '}
             For Your Purchase
-          </Typography>
-          <Typography fontSize={{ md: 24, xs: 16 }}>
+          </div>
+          <div className='md:text-[24px] text-[#23343A]'>
             Your personalized link page is now hosted forever.
-          </Typography>
-          <Typography fontSize={{ md: 24, xs: 16 }}>Share it!</Typography>
+          </div>
+          <div className='md:text-[24px] text-[#23343A]'>Share it!</div>
         </Box>
-        <Box sx={styles.linkBox} width={{ md: '50%', sm: '75%', xs: '100%' }}>
-          <Box sx={styles.iconBox}>
+        <Box className='flex mx-auto mt-4 bg-white shadow-md rounded-lg my-3 overflow-hidden items-center link-box-height link-box-width'>
+          <Box className='flex items-center justify-center border-r border-[#EBEBEB] h-full px-3 md:px-6 '>
             <img
               src={'/ChainIcon.svg'}
               alt='Chain Icon'
@@ -133,30 +57,36 @@ export default function ThankYou({
               height={25.94}
             />
           </Box>
-          <Box flexGrow={1} overflow={'hidden'} ml={1}>
+          <Box className='flex-grow overflow-hidden ml-1'>
             {loading ? (
-              <>
-                <Typography sx={styles.linkText}>Loading...</Typography>
-              </>
+              <div className='truncate text-[#23343A]'>Loading...</div>
             ) : (
-              <>
-                <Typography sx={styles.linkText}>{customURL}</Typography>
-              </>
+              <div className='truncate text-[#23343A]'>{customURL}</div>
             )}
           </Box>
-          <Tooltip
-            title='Copied!'
-            open={tooltipOpen}
-            disableHoverListener
-            disableFocusListener
-            disableTouchListener
-            placement='top'
-            arrow
-          >
-            <Button sx={styles.copyButton} onClick={handleCopy}>
-              Copy
-            </Button>
-          </Tooltip>
+          <Tooltip.Provider delayDuration={0}>
+            <Tooltip.Root open={tooltipOpen} onOpenChange={setTooltipOpen}>
+              <Tooltip.Trigger asChild>
+                <button
+                  className='bg-teal-500 text-white copy-button mr-1.5 border-0 rounded-lg font-semibold hover:bg-teal-600 cursor-pointer transition'
+                  onClick={handleCopy}
+                  type='button'
+                >
+                  Copy
+                </button>
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <Tooltip.Content
+                  side='top'
+                  align='center'
+                  className='bg-black text-white px-3 py-1 rounded shadow text-xs select-none'
+                >
+                  Copied!
+                  <Tooltip.Arrow className='fill-black' />
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            </Tooltip.Root>
+          </Tooltip.Provider>
         </Box>
         <ShareToFarcaster customURL={customURL} />
       </Box>

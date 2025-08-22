@@ -1,0 +1,161 @@
+@import 'tailwindcss';
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.h1-text {
+  font-size: 32px;
+}
+
+.link-box-width {
+  width: 100%;
+}
+
+.link-box-height {
+  height: 48px;
+}
+
+.copy-button {
+  padding: 12px 20px;
+}
+
+.bg-purple {
+  background: #855dcd;
+}
+
+.min-h-screen {
+  min-height: calc(100vh - 152px) !important;
+}
+
+.direction-row-column {
+  flex-direction: column;
+}
+
+.display-md-dragable-del-button {
+  display: none;
+}
+
+.display-xs-dragable-del-button {
+  display: flex;
+}
+
+.theme-preview-box {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  padding: 0 0 40px 0;
+}
+
+.theme-select-box {
+  width: 100%;
+  margin: auto;
+}
+
+.render-theme-preview {
+  width: 100%;
+  margin: auto;
+}
+
+.render-theme-minter {
+  width: 100%;
+}
+
+.tiktok-button-hidden {
+  display: none;
+}
+
+.select-theme-button-gap {
+  gap: 12px;
+}
+
+.select-theme-font-size {
+  font-size: 14px;
+}
+
+.font-redacted {
+  font-family: 'Redacted';
+}
+
+.non-select-theme-button-padding {
+  padding: 14px;
+}
+
+.select-theme-button-padding {
+  padding: 10.9px;
+}
+
+@media (min-width: 768px) {
+  .h1-text {
+    font-size: 64px;
+  }
+
+  .link-box-width {
+    width: 50%;
+  }
+
+  .link-box-height {
+    height: 64px;
+  }
+
+  .copy-button {
+    padding: 16px 28px;
+  }
+
+  .direction-row-column {
+    flex-direction: row;
+  }
+
+  .display-md-dragable-del-button {
+    display: flex;
+  }
+
+  .display-xs-dragable-del-button {
+    display: none;
+  }
+
+  .theme-preview-box {
+    width: 50%;
+    margin: 0 auto;
+    display: flex;
+    padding: 74px 24px;
+  }
+
+  .theme-select-box {
+    width: 70%;
+    margin: auto;
+  }
+
+  .render-theme-preview {
+    width: 70%;
+    margin: auto 0 auto auto;
+  }
+
+  .render-theme-minter {
+    width: 70%;
+  }
+
+  .tiktok-button-hidden {
+    display: block;
+  }
+
+  .select-theme-button-gap {
+    gap: 16px;
+  }
+
+  .select-theme-font-size {
+    font-size: 18px;
+  }
+
+  .non-select-theme-button-padding {
+    padding: 16px;
+  }
+
+  .select-theme-button-padding {
+    padding: 14px;
+  }
+}

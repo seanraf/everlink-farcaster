@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  TextField,
-  InputLabel,
-  Grid,
-  Typography,
-  IconButton,
-} from '@mui/material';
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import * as Label from '@radix-ui/react-label';
 import type { DraggableItemProps, UrlButton, URLButtonsProps } from '../types';
+import { CSS } from '@dnd-kit/utilities';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+import { Box } from '../components/Box';
+import { TextField } from '../components/TextField';
 import {
   DndContext,
   closestCenter,
@@ -26,82 +22,6 @@ import {
   verticalListSortingStrategy,
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
-
-const styles = {
-  dragIcon: {
-    my: 'auto',
-    display: 'flex',
-  },
-  textField: {
-    mt: 1,
-    '& .MuiOutlinedInput-root': {
-      backgroundColor: '#F8F8F8',
-      borderTopRightRadius: '8px',
-      borderBottomRightRadius: '8px',
-      '& fieldset': {
-        borderColor: '#CBD2E0',
-        borderRadius: '8px',
-      },
-      '&:hover fieldset': {
-        borderColor: '#CBD2E0',
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: '#CBD2E0',
-      },
-    },
-  },
-  dragItemOuterBox: {
-    display: 'flex',
-    width: '100%',
-    border: '1px solid #E7EAEF',
-    my: 1.5,
-    px: 2,
-    py: 2.2,
-    borderRadius: '8px',
-    gap: 1.5,
-    cursor: 'default',
-  },
-  addButtonSection: {
-    display: 'flex',
-    justifyContent: 'end',
-    mt: 2,
-  },
-  addButtonBox: {
-    display: 'flex',
-    cursor: 'pointer',
-  },
-  addRoundedIcon: {
-    width: '20px',
-    height: '20px',
-    my: 'auto',
-    color: 'text.secondary',
-  },
-  addButton: {
-    fontSize: { sm: 16, xs: 14 },
-    fontWeight: 'bold',
-    color: 'text.secondary',
-  },
-  inputLabel: {
-    color: 'text.secondary',
-    fontWeight: 500,
-    fontSize: { md: 16, xs: 14 },
-    '& .MuiTypography-root': { fontSize: { md: 16, xs: 14 } },
-  },
-  iconButtonforLarge: {
-    color: 'red',
-    width: 36,
-    height: 36,
-  },
-  iconButtonforSmall: {
-    color: 'red',
-    position: 'absolute',
-    right: 5,
-    bottom: 0,
-    top: 0,
-  },
-};
 
 const SortableItem: React.FC<DraggableItemProps> = ({
   button,
@@ -139,132 +59,87 @@ const SortableItem: React.FC<DraggableItemProps> = ({
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes}>
-      <Box sx={styles.dragItemOuterBox}>
-        <Box
-          sx={{
-            ...styles.dragIcon,
-            cursor: 'grab',
-            '&:active': {
-              cursor: 'grabbing',
-            },
-          }}
-          ref={dragHandleRef}
-          {...listeners}
-          style={{ touchAction: 'none' }}
-        >
-          <img
-            src={'/DragIcon.svg'}
-            alt='Drag Icon'
-            height={18}
-            width={12}
-            draggable='false'
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      className='flex w-full border border-gray-200 my-2 px-4 py-4 rounded-lg gap-4 bg-white'
+    >
+      <Box
+        ref={dragHandleRef}
+        {...listeners}
+        style={{ touchAction: 'none' }}
+        className='flex items-center cursor-grab select-none'
+      >
+        <img
+          src={'/DragIcon.svg'}
+          alt='Drag Icon'
+          height={18}
+          width={12}
+          draggable='false'
+        />
+      </Box>
+      <Box
+        className='flex flex-1 direction-row-column gap-4 relative'
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <Box className='flex-1'>
+          <Label.Root className='block text-gray-600 font-medium mb-1'>
+            Button Label
+          </Label.Root>
+          <TextField
+            id={`button-title-${button.id}`}
+            label=''
+            value={button.title}
+            onChange={(e) => handleInputChange(e, index, 'title')}
+            error={error?.title}
           />
         </Box>
-        <Box
-          sx={{ display: 'flex', width: '100%' }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <Grid
-            container
-            spacing={2}
-            style={{ position: 'relative', width: '100%' }}
-          >
-            <Grid size={{ md: 6, xs: 12 }}>
-              <Box>
-                <InputLabel sx={styles.inputLabel}>
-                  <Box sx={{ display: 'flex', position: 'relative' }}>
-                    <Typography>Button Label</Typography>
-                    <IconButton
-                      edge='end'
-                      sx={{
-                        ...styles.iconButtonforSmall,
-                        display: {
-                          md: 'none',
-                          xs: urlButtonsLength === 1 ? 'none' : 'flex',
-                        },
-                      }}
-                    >
-                      <img
-                        src={'/DeleteIcon.svg'}
-                        alt='Delete'
-                        width={20}
-                        height={20}
-                        onClick={() => handleDelete(index)}
-                      />
-                    </IconButton>
-                  </Box>
-                </InputLabel>
-                <TextField
-                  InputProps={{
-                    inputProps: {
-                      style: {
-                        padding: '0 10px',
-                        height: '48px',
-                        width: '100%',
-                        backgroundColor: '#F8F8F8',
-                      },
-                    },
-                  }}
-                  sx={styles.textField}
-                  value={button.title}
-                  onChange={(e) => handleInputChange(e, index, 'title')}
-                  required
-                  fullWidth
-                  variant='outlined'
-                  error={!!error?.title}
-                  helperText={error?.title}
-                />
-              </Box>
-            </Grid>
-            <Grid size={{ md: 6, xs: 12 }}>
-              <Box>
-                <InputLabel sx={styles.inputLabel}>URL</InputLabel>
-                <TextField
-                  InputProps={{
-                    inputProps: {
-                      style: {
-                        padding: '0 10px',
-                        height: '48px',
-                        width: '100%',
-                        backgroundColor: '#F8F8F8',
-                      },
-                    },
-                  }}
-                  sx={styles.textField}
-                  value={button.url}
-                  onChange={(e) => handleInputChange(e, index, 'url')}
-                  required
-                  fullWidth
-                  variant='outlined'
-                  error={!!error?.url}
-                  helperText={error?.url}
-                />
-              </Box>
-            </Grid>
-          </Grid>
-          <Box
-            sx={{
-              display: {
-                md: isHovered && urlButtonsLength !== 1 ? 'flex' : 'none',
-                xs: 'none',
-              },
-              mt: '37px',
-              ml: 1,
-            }}
-          >
-            <IconButton edge='end' sx={styles.iconButtonforLarge}>
-              <img
-                src={'/DeleteIcon.svg'}
-                alt='Delete'
-                width={24}
-                height={24}
-                onClick={() => handleDelete(index)}
-              />
-            </IconButton>
-          </Box>
+        <Box className='flex-1'>
+          <Label.Root className='block text-gray-600 font-medium mb-1'>
+            URL
+          </Label.Root>
+          <TextField
+            id={`button-url-${button.id}`}
+            label=''
+            value={button.url}
+            onChange={(e) => handleInputChange(e, index, 'url')}
+            error={error?.url}
+          />
         </Box>
+
+        {urlButtonsLength > 1 && (
+          <>
+            <button
+              type='button'
+              className={`border-0 bg-transparent  items-center justify-center text-red-500 hover:bg-red-50 w-6 h-6 cursor-pointer
+                ${isHovered ? 'display-md-dragable-del-button' : 'hidden'} ${
+                urlButtonsLength > 1 ? 'flex' : 'hidden'
+              } md:relative`}
+              style={{ marginTop: '39px' }}
+              onClick={() => handleDelete(index)}
+              tabIndex={-1}
+            >
+              <img src='/DeleteIcon.svg' alt='Delete' className='w-6 h-6' />
+            </button>
+          </>
+        )}
+        {urlButtonsLength > 1 && (
+          <>
+            <button
+              type='button'
+              className={`absolute right-0 display-xs-dragable-del-button top-0 border-0 bg-transparent md:static md:ml-2 flex items-center justify-center text-red-500 hover:bg-red-50 w-6 h-6
+                ${isHovered ? 'md:flex' : 'md:hidden'} ${
+                urlButtonsLength > 1 ? 'flex' : 'hidden'
+              } md:relative`}
+              onClick={() => handleDelete(index)}
+              tabIndex={-1}
+            >
+              <img src='/DeleteIcon.svg' alt='Delete' className='w-5 h-5' />
+            </button>
+          </>
+        )}
       </Box>
     </div>
   );
@@ -385,7 +260,7 @@ const URLButtons: React.FC<URLButtonsProps> = ({
   };
 
   return (
-    <Box sx={{ cursor: 'default' }}>
+    <Box className='cursor-default'>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -418,97 +293,62 @@ const URLButtons: React.FC<URLButtonsProps> = ({
           }}
         >
           {activeId ? (
-            <Box
-              sx={{
-                ...styles.dragItemOuterBox,
-                cursor: 'grabbing',
-              }}
-              bgcolor={'#ffffff'}
-            >
-              <Box sx={styles.dragIcon}>
+            <Box className='flex w-full border border-gray-200 my-2 px-4 py-4 rounded-lg gap-4 bg-white opacity-80 cursor-grabbing'>
+              <Box className='flex items-center'>
                 <img
                   src={'/DragIcon.svg'}
                   alt='Drag Icon'
-                  height={18}
-                  width={12}
+                  className='h-4 w-3'
                 />
               </Box>
-              <Box width={'100%'} sx={{ display: 'flex' }}>
-                <Grid
-                  container
-                  spacing={2}
-                  style={{ position: 'relative', width: '100%' }}
-                >
-                  <Grid size={{ md: 6, xs: 12 }}>
-                    <Box>
-                      <InputLabel
-                        htmlFor='input-with-icon-adornment'
-                        sx={styles.inputLabel}
-                      >
-                        <Box sx={{ display: 'flex' }}>
-                          <Typography>Button Label</Typography>
-                        </Box>
-                      </InputLabel>
-                      <TextField
-                        InputProps={{
-                          inputProps: {
-                            style: {
-                              padding: '0 10px',
-                              height: '48px',
-                              width: '100%',
-                              backgroundColor: '#F8F8F8',
-                            },
-                          },
-                        }}
-                        sx={styles.textField}
-                        value={activeItem?.title}
-                        fullWidth
-                        id='outlined-basic'
-                        variant='outlined'
-                      />
-                    </Box>
-                  </Grid>
-                  <Grid size={{ md: 6, xs: 12 }}>
-                    <Box>
-                      <InputLabel
-                        htmlFor='input-with-icon-adornment'
-                        sx={styles.inputLabel}
-                      >
-                        URL
-                      </InputLabel>
-                      <Box>
-                        <TextField
-                          InputProps={{
-                            inputProps: {
-                              style: {
-                                padding: '0 10px',
-                                height: '48px',
-                                width: '100%',
-                                backgroundColor: '#F8F8F8',
-                              },
-                            },
-                          }}
-                          sx={styles.textField}
-                          value={activeItem?.url}
-                          required
-                          fullWidth
-                          id='outlined-basic'
-                          variant='outlined'
-                        />
-                      </Box>
-                    </Box>
-                  </Grid>
-                </Grid>
+              <Box className='flex-1 flex direction-row-column gap-4'>
+                <Box className='flex-1'>
+                  <Label.Root className='block text-gray-500 font-medium mb-1'>
+                    Button Label
+                  </Label.Root>
+                  <TextField
+                    id={`drag-title-${activeItem?.id}`}
+                    label=''
+                    value={activeItem!.title}
+                    onChange={() => {}}
+                    error={undefined}
+                    disabled
+                  />
+                </Box>
+                <Box className='flex-1'>
+                  <Label.Root className='block text-gray-500 font-medium mb-1'>
+                    URL
+                  </Label.Root>
+                  <TextField
+                    id={`drag-url-${activeItem?.id}`}
+                    label=''
+                    value={activeItem!.url}
+                    onChange={() => {}}
+                    error={undefined}
+                    disabled
+                  />
+                </Box>
               </Box>
             </Box>
           ) : null}
         </DragOverlay>
 
-        <Box sx={styles.addButtonSection}>
-          <Box sx={styles.addButtonBox} onClick={addButton}>
-            <AddRoundedIcon sx={styles.addRoundedIcon} />
-            <Typography sx={styles.addButton}>Add Button</Typography>
-          </Box>
+        <Box className='flex justify-end mt-4'>
+          <button
+            type='button'
+            className='flex items-center gap-1 cursor-pointer bg-transparent border-0 font-bold'
+            onClick={addButton}
+          >
+            <svg width='20' height='20' fill='none' viewBox='0 0 24 24'>
+              <path
+                d='M12 5v14m7-7H5'
+                stroke='currentColor'
+                strokeWidth='2'
+                strokeLinecap='round'
+              />
+            </svg>
+            Add Button
+          </button>
         </Box>
       </DndContext>
     </Box>

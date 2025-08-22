@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import LandingPage from './LandingPage';
 import EverlinkPages from './EverlinkPages';
 import { useAuth } from '@crossmint/client-sdk-react-ui';
