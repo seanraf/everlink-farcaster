@@ -9,22 +9,31 @@ import SuccessCase from './view/SuccessCase';
 import { ContextProvider } from './providers/FarcasterContextProvider';
 import FarcasterFrameProvider from './providers/FarcasterFrameProvider';
 import CrossmintProviders from './providers/Crossmint';
+import { WagmiProvider } from 'wagmi';
+import { config } from './lib/wegmiConfig';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
     <>
       <CrossmintProviders>
         <FarcasterFrameProvider>
-          <ContextProvider>
-            <NavBar />
-            <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/success' element={<SuccessCase />} />
-              <Route path='/failure' element={<Failure />} />
-              <Route path='/success/:id' element={<Success />} />
-            </Routes>
-            <Footer />
-          </ContextProvider>
+          <WagmiProvider config={config}>
+            <QueryClientProvider client={queryClient}>
+              <ContextProvider>
+                <NavBar />
+                <Routes>
+                  <Route path='/' element={<Home />} />
+                  <Route path='/success' element={<SuccessCase />} />
+                  <Route path='/failure' element={<Failure />} />
+                  <Route path='/success/:id' element={<Success />} />
+                </Routes>
+                <Footer />
+              </ContextProvider>
+            </QueryClientProvider>
+          </WagmiProvider>
         </FarcasterFrameProvider>
       </CrossmintProviders>
     </>
