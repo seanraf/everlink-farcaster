@@ -45,7 +45,8 @@ export default function EverlinkPages() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              fid: user?.farcaster?.fid ?? context?.user?.fid,
+              provider: 'farcaster',
+              id: user?.farcaster?.fid ?? context?.user?.fid,
               username: user?.farcaster?.username ?? context?.user?.username,
             }),
           }

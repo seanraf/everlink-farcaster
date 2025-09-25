@@ -28,7 +28,7 @@ export default function Uploader({
   const frontendBaseUrl = import.meta.env.VITE_FRONTEND_BASE_URL as string;
   const backendBaseUrl = import.meta.env.VITE_BACKEND_BASE_URL as string;
   const shortIoUrl = import.meta.env.VITE_SHORT_IO_BASE_URL as string;
-  const domain = import.meta.env.VITE_DOMAIN_NAME as string;
+  const domain = import.meta.env.VITE_DOMAIN as string;
   const apiKey = import.meta.env.VITE_SHORT_IO_API_KEY as string;
 
   const saveDeploymentData = async (
@@ -49,7 +49,8 @@ export default function Uploader({
         `${backendBase}/api/deploymentHistory/create`,
         {
           content,
-          farcasterId,
+          id: farcasterId,
+          provider: 'farcaster',
         }
       );
       return response;
