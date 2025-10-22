@@ -102,3 +102,20 @@ export type ContextType = {
     React.SetStateAction<FrameContextType | undefined>
   >;
 };
+
+export type DeploymentRecord = {
+  _id: string;
+  arweaveTransactionId: string;
+  arweaveUrl: string;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  createdBy: string;
+  customUrl: string;
+  deployed: boolean;
+  ipfsDomainList: string[];
+  ipfsHash: string;
+  ipfsTaskId: string;
+  provider: string;
+  shortUrlId: string;
+  __v: number;
+};
