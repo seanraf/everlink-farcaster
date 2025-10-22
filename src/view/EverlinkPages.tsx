@@ -12,7 +12,6 @@ import { useFrameContext } from '../providers/FarcasterContextProvider';
 import LinearStepper from '../components/LinearStepper';
 import { SnackbarAlert } from '../components/SnackbarAlert';
 import type { UrlButton } from '../types';
-import ConnectMenu from '../components/ConnectMenu';
 
 export default function EverlinkPages() {
   const { user } = useAuth();
@@ -93,20 +92,17 @@ export default function EverlinkPages() {
     switch (activeStep) {
       case 0:
         return (
-          <>
-            <Form
-              userName={userName}
-              setUserName={setUserName}
-              bio={bio}
-              setBio={setBio}
-              setActiveStep={setActiveStep}
-              analyticsTag={analyticsTag}
-              setAnalyticsTag={setAnalyticsTag}
-              urlButtons={urlButtons}
-              setUrlButtons={setUrlButtons}
-            />
-            <ConnectMenu />
-          </>
+          <Form
+            userName={userName}
+            setUserName={setUserName}
+            bio={bio}
+            setBio={setBio}
+            setActiveStep={setActiveStep}
+            analyticsTag={analyticsTag}
+            setAnalyticsTag={setAnalyticsTag}
+            urlButtons={urlButtons}
+            setUrlButtons={setUrlButtons}
+          />
         );
       case 1:
         return (

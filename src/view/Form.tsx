@@ -4,7 +4,7 @@ import { Box } from '../components/Box';
 import * as Label from '@radix-ui/react-label';
 import { useAuth } from '@crossmint/client-sdk-react-ui';
 import { useFrameContext } from '../providers/FarcasterContextProvider';
-import type { UrlButton, UrlButtonErrors } from '../types';
+import type { FormPropsType, UrlButton, UrlButtonErrors } from '../types';
 
 const Form = ({
   setActiveStep,
@@ -16,7 +16,7 @@ const Form = ({
   setAnalyticsTag,
   urlButtons,
   setUrlButtons,
-}: any) => {
+}: FormPropsType) => {
   const { user } = useAuth();
   const { context } = useFrameContext();
   const [showOptionalField, setShowOptionalField] = useState(false);
@@ -34,7 +34,7 @@ const Form = ({
       user?.farcaster?.username ||
       (context?.user.username && !isInitialUsername)
     ) {
-      setUserName(user?.farcaster?.username ?? context?.user.username);
+      setUserName(user?.farcaster?.username ?? context?.user.username ?? '');
       setIsInitialUsername(true);
     }
   }, [user, context?.user, isInitialUsername, setUserName]);
