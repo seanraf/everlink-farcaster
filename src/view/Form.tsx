@@ -7,6 +7,7 @@ import { useFrameContext } from '../providers/FarcasterContextProvider';
 import type { FormPropsType, UrlButton, UrlButtonErrors } from '../types';
 import MintFlow from '../components/MintNFT';
 import { BasePay } from '../components/BasePay';
+import { SendTransaction } from '../components/SendTransaction';
 
 const Form = ({
   setActiveStep,
@@ -272,6 +273,8 @@ const Form = ({
         <MintFlow />
         <hr />
         <BasePay />
+        <hr />
+        <SendTransaction />
       </form>
     </Box>
   );
