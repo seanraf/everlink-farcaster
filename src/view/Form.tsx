@@ -8,6 +8,7 @@ import type { FormPropsType, UrlButton, UrlButtonErrors } from '../types';
 import MintFlow from '../components/MintNFT';
 import { BasePay } from '../components/BasePay';
 import { SendTransaction } from '../components/SendTransaction';
+import MintingContract from '../components/MintingContract';
 
 const Form = ({
   setActiveStep,
@@ -275,6 +276,9 @@ const Form = ({
         <BasePay />
         <hr />
         <SendTransaction />
+        <hr />
+        <h3>Smart Contract Test</h3>
+        <MintingContract />
       </form>
     </Box>
   );
