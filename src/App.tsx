@@ -13,7 +13,7 @@ import { WagmiProvider } from 'wagmi';
 import { config } from './lib/wegmiConfig';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { OnchainKitProvider } from '@coinbase/onchainkit';
-import { base } from 'viem/chains';
+import { sepolia } from 'viem/chains';
 
 const queryClient = new QueryClient();
 
@@ -24,7 +24,7 @@ function App() {
         <FarcasterFrameProvider>
           <OnchainKitProvider
             apiKey='Atp1YiODMDlZg8kVALmA51Q450rZedxr'
-            chain={base}
+            chain={sepolia}
             projectId='b56fbc8d-e69b-417e-9118-e33967b22bfa'
           >
             <WagmiProvider config={config}>

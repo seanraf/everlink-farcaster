@@ -32,8 +32,8 @@ export default function MintFlow() {
           <Transaction
             calls={[
               {
-                to: '0x...',
-                data: '0x...',
+                to: '0xEDA1896bDf3908c2e480492ecfF0491a50D380eD',
+                value: BigInt(0.0001 * 1e18),
               },
             ]}
           >
