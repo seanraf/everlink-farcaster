@@ -6,6 +6,7 @@ import { useAuth } from '@crossmint/client-sdk-react-ui';
 import { useFrameContext } from '../providers/FarcasterContextProvider';
 import type { FormPropsType, UrlButton, UrlButtonErrors } from '../types';
 import MintFlow from '../components/MintNFT';
+import { BasePay } from '../components/BasePay';
 
 const Form = ({
   setActiveStep,
@@ -269,6 +270,8 @@ const Form = ({
           Next
         </button>
         <MintFlow />
+        <hr />
+        <BasePay />
       </form>
     </Box>
   );
