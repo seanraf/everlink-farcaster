@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAccount, useWriteContract } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
 import { contractABI } from '../utils/abi';
