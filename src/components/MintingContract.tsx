@@ -21,13 +21,15 @@ export default function MintButton() {
     }
 
     try {
-      await writeContract({
+      const tx = await writeContract({
         address: CONTRACT_ADDRESS,
         abi: ABI,
         functionName: 'mint',
         args: [link],
         chainId: baseSepolia.id,
       });
+
+      console.log('TX Result:', tx);
       setStatus('✅ NFT minted successfully!');
     } catch (err) {
       console.error(err);
