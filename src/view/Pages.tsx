@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import LandingPage from './LandingPage';
-import EverlinkPages from './EverlinkPages';
 import { useAuth } from '@crossmint/client-sdk-react-ui';
 
 import Loader from './Loader';
 import { useFrameContext } from '../providers/FarcasterContextProvider';
+import MintingContract from '../components/MintingContract';
 
 export default function Pages({
   isAuthenticated,
@@ -31,5 +31,6 @@ export default function Pages({
     return <Loader />;
   }
 
-  return isUserAuthenticated ? <EverlinkPages /> : <LandingPage />;
+  // return isUserAuthenticated ? <EverlinkPages /> : <LandingPage />;
+  return isUserAuthenticated ? <MintingContract /> : <LandingPage />;
 }

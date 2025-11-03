@@ -5,10 +5,6 @@ import * as Label from '@radix-ui/react-label';
 import { useAuth } from '@crossmint/client-sdk-react-ui';
 import { useFrameContext } from '../providers/FarcasterContextProvider';
 import type { FormPropsType, UrlButton, UrlButtonErrors } from '../types';
-import MintFlow from '../components/MintNFT';
-import { BasePay } from '../components/BasePay';
-import { SendTransaction } from '../components/SendTransaction';
-import MintingContract from '../components/MintingContract';
 
 const Form = ({
   setActiveStep,
@@ -271,14 +267,6 @@ const Form = ({
         >
           Next
         </button>
-        <MintFlow />
-        <hr />
-        <BasePay />
-        <hr />
-        <SendTransaction />
-        <hr />
-        <h3>Smart Contract Test</h3>
-        <MintingContract />
       </form>
     </Box>
   );
