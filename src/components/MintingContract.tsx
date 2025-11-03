@@ -21,11 +21,19 @@ export default function MintButton() {
     chainId: baseSepolia.id,
   });
   const publicClient = usePublicClient();
-  console.log('Public Client:', publicClient);
-  console.log('Base Sepolia:', baseSepolia);
+  console.log('balanceData:', balanceData);
   const [link, setLink] = useState('');
   const [status, setStatus] = useState<string | null>(null);
   const [gasEstimate, setGasEstimate] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (!address || !publicClient) return;
+      const balance = await publicClient.getBalance({ address });
+      console.log('Manual Balance:', formatEther(balance));
+    };
+    fetchBalance();
+  }, [address, publicClient]);
 
   useEffect(() => {
     const estimateGas = async () => {
