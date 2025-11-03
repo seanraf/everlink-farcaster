@@ -20,8 +20,9 @@ export default function MintButton() {
     address,
     chainId: baseSepolia.id,
   });
-  const publicClient = usePublicClient({ chainId: baseSepolia.id });
-
+  const publicClient = usePublicClient();
+  console.log('Public Client:', publicClient);
+  console.log('Base Sepolia:', baseSepolia);
   const [link, setLink] = useState('');
   const [status, setStatus] = useState<string | null>(null);
   const [gasEstimate, setGasEstimate] = useState<string | null>(null);
