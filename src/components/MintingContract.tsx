@@ -12,10 +12,11 @@ export default function MintButton() {
   const { writeContract, isPending, isSuccess } = useWriteContract();
 
   const [link, setLink] = useState('');
+  const [status, setStatus] = useState<string | null>(null);
 
   const handleMint = async () => {
     if (!isConnected) {
-      alert('Connect your Farcaster wallet first!');
+      setStatus('⚠️ Please connect your Farcaster wallet first.');
       return;
     }
 
@@ -27,10 +28,10 @@ export default function MintButton() {
         args: [link],
         chainId: baseSepolia.id,
       });
-      alert('NFT minted successfully!');
+      setStatus('✅ NFT minted successfully!');
     } catch (err) {
       console.error(err);
-      alert('Error while minting NFT');
+      setStatus('❌ Error while minting NFT. Check console for details.');
     }
   };
 
@@ -50,6 +51,11 @@ export default function MintButton() {
       >
         {isPending ? 'Minting...' : 'Mint NFT'}
       </button>
+      {status && (
+        <p className='mt-4 text-sm text-gray-200 whitespace-pre-line'>
+          {status}
+        </p>
+      )}
       {isSuccess && <p className='mt-2 text-green-600'>Minted!</p>}
     </div>
   );
