@@ -5,6 +5,7 @@ import {
   useWriteContract,
   useBalance,
   usePublicClient,
+  useWaitForTransactionReceipt,
 } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
 import { contractABI } from '../utils/abi';
@@ -15,16 +16,36 @@ const ABI = contractABI;
 
 export default function MintButton() {
   const { address, isConnected } = useAccount();
-  const { writeContract, isPending, isSuccess } = useWriteContract();
   const { data: balanceData } = useBalance({
     address,
     chainId: baseSepolia.id,
   });
+
   const publicClient = usePublicClient();
+
   console.log('balanceData:', balanceData);
   const [link, setLink] = useState('');
   const [status, setStatus] = useState<string | null>(null);
   const [gasEstimate, setGasEstimate] = useState<string | null>(null);
+
+  const {
+    writeContract,
+    data: txHash,
+    isPending,
+    isSuccess,
+  } = useWriteContract();
+
+  // Wait for the transaction receipt
+
+  const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+    hash: txHash,
+  });
+
+  useEffect(() => {
+    if (isConfirmed) {
+      setStatus('✅ Transaction confirmed! NFT minted successfully.');
+    }
+  }, [isConfirmed]);
 
   useEffect(() => {
     const fetchBalance = async () => {

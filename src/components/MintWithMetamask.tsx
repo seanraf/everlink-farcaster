@@ -8,6 +8,7 @@ import {
   useBalance,
   usePublicClient,
   useSwitchChain,
+  useWaitForTransactionReceipt,
 } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
 import { contractABI } from '../utils/abi';
@@ -20,7 +21,12 @@ export default function MintWithMetamask() {
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
-  const { writeContract, isPending, isSuccess } = useWriteContract();
+  const {
+    writeContract,
+    data: txHash,
+    isPending,
+    isSuccess,
+  } = useWriteContract();
   const { data: balanceData } = useBalance({
     address,
     chainId: baseSepolia.id,
@@ -30,6 +36,16 @@ export default function MintWithMetamask() {
   const [link, setLink] = useState('');
   const [status, setStatus] = useState<string | null>(null);
   const [gasEstimate, setGasEstimate] = useState<string | null>(null);
+
+  const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+    hash: txHash,
+  });
+
+  useEffect(() => {
+    if (isConfirmed) {
+      setStatus('✅ Transaction confirmed! NFT minted successfully.');
+    }
+  }, [isConfirmed]);
 
   // ✅ Ensure correct network
   useEffect(() => {
@@ -186,6 +202,21 @@ export default function MintWithMetamask() {
         </p>
       )}
       {isSuccess && <p className='mt-2 text-green-600'>Minted!</p>}
+
+      {/* ✅ Show txHash when available */}
+      {txHash && (
+        <p className='mt-2 text-sm text-blue-400'>
+          🔗 Tx Hash:{' '}
+          <a
+            href={`https://sepolia.basescan.org/tx/${txHash}`}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='underline'
+          >
+            View on BaseScan
+          </a>
+        </p>
+      )}
     </div>
   );
 }
