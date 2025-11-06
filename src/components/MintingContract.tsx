@@ -146,6 +146,21 @@ export default function MintButton() {
         </p>
       )}
       {isSuccess && <p className='mt-2 text-green-600'>Minted!</p>}
+
+      {/* ✅ Show txHash when available */}
+      {txHash && (
+        <p className='mt-2 text-sm text-blue-400'>
+          🔗 Tx Hash:{' '}
+          <a
+            href={`https://sepolia.basescan.org/tx/${txHash}`}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='underline'
+          >
+            View on BaseScan
+          </a>
+        </p>
+      )}
     </div>
   );
 }
