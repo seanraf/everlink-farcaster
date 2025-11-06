@@ -4,8 +4,9 @@ import { useAuth } from '@crossmint/client-sdk-react-ui';
 
 import Loader from './Loader';
 import { useFrameContext } from '../providers/FarcasterContextProvider';
-import MintWithMetamask from '../components/MintWithMetamask';
+// import MintWithMetamask from '../components/MintWithMetamask';
 import EverlinkPages from './EverlinkPages';
+import MintingContract from '../components/MintingContract';
 // import EverlinkPages from './EverlinkPages';
 
 export default function Pages({
@@ -37,7 +38,8 @@ export default function Pages({
   return isUserAuthenticated ? (
     <>
       <EverlinkPages />
-      <MintWithMetamask />
+      {/* <MintWithMetamask /> */}
+      <MintingContract />
     </>
   ) : (
     <LandingPage />
