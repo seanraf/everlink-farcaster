@@ -180,14 +180,6 @@ export default function EverlinkPages() {
         severity={snackbar.severity}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
       />
-      {/* <MintFlow />
-      <hr />
-      <BasePay />
-      <hr />
-      <SendTransaction /> */}
-      {/* <hr />
-      <h3>Smart Contract Test</h3>
-      <MintingContract /> */}
     </Box>
   );
 }
