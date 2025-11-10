@@ -6,7 +6,7 @@ import SelectTheme from './SelectTheme';
 import Dark from './previews/Dark';
 import Light from './previews/Light';
 import Uploader from './Uploader';
-import Minter from './Minter';
+import Mint from './Mint';
 import { useAuth } from '@crossmint/client-sdk-react-ui';
 import { useFrameContext } from '../providers/FarcasterContextProvider';
 import LinearStepper from '../components/LinearStepper';
@@ -167,7 +167,7 @@ export default function EverlinkPages() {
         </Box>
       </Box>
       <Box style={{ display: activeStep === 2 ? 'flex' : 'none' }}>
-        <Minter
+        <Mint
           setActiveStep={setActiveStep}
           deploymentTaskId={deploymentTaskId}
           renderThemePreview={renderThemePreview}
