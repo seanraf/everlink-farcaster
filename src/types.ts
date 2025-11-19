@@ -46,7 +46,7 @@ export type UploaderProps = {
   userName: string;
   bio: string;
   urlButtons: UrlButton[];
-  setDeploymentTaskId: React.Dispatch<React.SetStateAction<string>>;
+  setIpfsTaskId: React.Dispatch<React.SetStateAction<string>>;
   setSnackbar: React.Dispatch<
     React.SetStateAction<{
       open: boolean;
@@ -65,7 +65,7 @@ export type DomainContent = {
 export type MinterProps = {
   setActiveStep: React.Dispatch<React.SetStateAction<number>>;
   renderThemePreview: () => JSX.Element;
-  deploymentTaskId: string;
+  ipfsTaskId: string;
   loading: boolean;
 };
 

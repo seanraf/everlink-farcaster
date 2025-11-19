@@ -20,7 +20,7 @@ export default function EverlinkPages() {
   const [userName, setUserName] = useState('');
   const [bio, setBio] = useState('');
   const [analyticsTag, setAnalyticsTag] = useState('');
-  const [deploymentTaskId, setDeploymentTaskId] = useState('');
+  const [ipfsTaskId, setIpfsTaskId] = useState('');
   const [selectedTheme, setSelectedTheme] = useState('Dark Theme');
   const [urlButtons, setUrlButtons] = useState<UrlButton[]>([
     { id: '1', title: '', url: 'https://' },
@@ -117,7 +117,7 @@ export default function EverlinkPages() {
               setActiveStep={setActiveStep}
               urlButtons={urlButtons}
               selectedTheme={selectedTheme}
-              setDeploymentTaskId={setDeploymentTaskId}
+              setIpfsTaskId={setIpfsTaskId}
               setSnackbar={setSnackbar}
               setLoading={setLoading}
             />
@@ -169,7 +169,7 @@ export default function EverlinkPages() {
       <Box style={{ display: activeStep === 2 ? 'flex' : 'none' }}>
         <Mint
           setActiveStep={setActiveStep}
-          deploymentTaskId={deploymentTaskId}
+          ipfsTaskId={ipfsTaskId}
           renderThemePreview={renderThemePreview}
           loading={loading}
         />

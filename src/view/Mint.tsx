@@ -5,11 +5,9 @@ import Minter from '../components/Minter';
 
 export default function Mint({
   renderThemePreview,
-  deploymentTaskId,
+  ipfsTaskId,
   loading,
 }: MinterProps) {
-  console.log('deploymentTaskId in Mint:', deploymentTaskId);
-
   return (
     <Box className="min-h-[calc(100vh-152px)] flex bg-[url('/LandingBackground.png')] bg-repeat-round w-full relative">
       {loading ? (
@@ -48,7 +46,7 @@ export default function Mint({
                 </span>
               </Box>
               <Box className='mx-2 my-1'>
-                <Minter />
+                <Minter ipfsTaskId={ipfsTaskId} />
               </Box>
             </Box>
           </Box>

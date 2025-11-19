@@ -8,23 +8,19 @@ import {
   useWaitForTransactionReceipt,
 } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
-
+// import { contractABI } from '../utils/abi';
 import { formatEther } from 'viem';
 import { Box } from './Box';
 import axios from 'axios';
-import { contractABI } from '../abi/mintAbi';
-import { USDC_ABI } from '../abi/usdcAbi';
 
-const ABI = contractABI;
+// const CONTRACT_ADDRESS = '0x28dA343F976B00c1aFF992cee398B02813244070';
+// const ABI = contractABI;
 
 export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   const backendBaseUrl = import.meta.env.VITE_BACKEND_BASE_URL as string;
-  //   const contractAddress = import.meta.env.VITE_SMART_CONTRACT_ADDRESS as string;
-  const CONTRACT_ADDRESS = '0xD187Bef30c558727B07A59249223bD45F567AAf6';
-  const USDC_ADDRESS = '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
-
+  console.log(ipfsTaskId);
   const [arweaveTransactionId, setArweaveTransactionId] = useState('');
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
   const { data: balanceData } = useBalance({
     address,
     chainId: baseSepolia.id,
@@ -36,7 +32,11 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   const [status, setStatus] = useState<string | null>(null);
   console.log('status:', status);
 
-  const { writeContract, data: txHash } = useWriteContract();
+  // const link =
+  //   'https://arweave.net/Gme9IFaNz-iSL77u5j0CxQJ1rrjXZgaNOIQwDUocU0Y';
+  const { data: txHash } = useWriteContract();
+
+  // Wait for the transaction receipt
 
   const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({
     hash: txHash,
@@ -45,7 +45,6 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   useEffect(() => {
     if (isConfirmed) {
       setStatus('✅ Transaction confirmed! NFT minted successfully.');
-      console.log('txHash:', txHash);
     }
   }, [isConfirmed]);
 
@@ -59,45 +58,41 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   }, [address, publicClient]);
 
   const handleMint = async () => {
-    if (!isConnected) {
-      setStatus('⚠️ Please connect your Farcaster wallet first.');
-      return;
-    }
+    // if (!isConnected) {
+    //   setStatus('⚠️ Please connect your Farcaster wallet first.');
+    //   return;
+    // }
 
     try {
       const response = await axios.get(
-        `${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`
+        // `${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`
+        `${backendBaseUrl}/api/deploymentHistory/691704ddd7531c00071c79f4`
       );
       const deploymentRecords = response.data.records;
       if (deploymentRecords) {
-        setArweaveTransactionId(deploymentRecords.arweaveUrl);
+        setArweaveTransactionId(deploymentRecords.arweaveTransactionId);
       } else {
         console.error('No deployment records found.');
       }
       console.log('arweaveTransactionId:', arweaveTransactionId);
-
-      const amountUSDC = BigInt(1 * 1e6);
-      const receiverWallet = '0x2990731080E4511D12892F96D5CDa51bF1B9D56c';
-
-      await writeContract({
-        address: USDC_ADDRESS,
-        abi: USDC_ABI,
-        functionName: 'approve',
-        args: [CONTRACT_ADDRESS, amountUSDC],
-        chainId: baseSepolia.id,
-      });
-
-      await writeContract({
-        address: CONTRACT_ADDRESS,
-        abi: ABI,
-        functionName: 'mint',
-        args: [arweaveTransactionId, amountUSDC, receiverWallet],
-        chainId: baseSepolia.id,
-      });
-
-      await axios.put(`${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`, {
-        txHash: `${txHash}`,
-      });
+      //   await writeContract({
+      //     address: CONTRACT_ADDRESS,
+      //     abi: ABI,
+      //     functionName: 'mint',
+      //     args: [link],
+      //     chainId: baseSepolia.id,
+      //   });
+      const hash =
+        '0xedf04779bca1742d22f7ab4f0e35c8382df738c8ea5a28db562b1a4c3ebd5e1f';
+      await axios.put(
+        `${backendBaseUrl}/api/deploymentHistory/691704ddd7531c00071c79f4`,
+        {
+          txHash: `${hash}`,
+        }
+      );
+      //   await axios.put(`${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`, {
+      //     txHash: `${hash}`,
+      //   });
 
       setStatus('✅ NFT minted successfully!');
     } catch (err) {

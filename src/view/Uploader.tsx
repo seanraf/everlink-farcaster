@@ -15,7 +15,7 @@ export default function Uploader({
   userName,
   bio,
   urlButtons,
-  setDeploymentTaskId,
+  setIpfsTaskId,
   setSnackbar,
   setLoading,
 }: UploaderProps) {
@@ -143,7 +143,7 @@ export default function Uploader({
       const ipfsContent = ipfsUploadResponse?.data?.content;
       const ipfsTaskId = ipfsContent?.taskId;
       const ipfsFileHash = ipfsContent?.fileHash;
-      setDeploymentTaskId(ipfsTaskId);
+      setIpfsTaskId(ipfsTaskId);
       const farcasterId = user?.farcaster?.fid ?? context?.user?.fid;
       await saveDeploymentData(farcasterId, arweaveTransactionId, ipfsContent);
       const customUrlData = await generateCustomURL(ipfsFileHash);
