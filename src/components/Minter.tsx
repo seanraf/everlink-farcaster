@@ -80,7 +80,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
       }
       console.log('arweaveTransactionId:', arweaveTransactionId);
 
-      const amountUSDC = BigInt(1 * 1e6);
+      const amountUSDC = 1_000_000n;
       const receiverWallet = '0x2990731080E4511D12892F96D5CDa51bF1B9D56c';
       setStatus('🔄 Step 1/2: Approving USDC...');
 
@@ -92,6 +92,10 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
         chainId: baseSepolia.id,
       });
 
+      while (!approveHash) {
+        await new Promise((res) => setTimeout(res, 500));
+      }
+      console.log('approveHash:', approveHash);
       const approveReceipt = await publicClient?.waitForTransactionReceipt({
         hash: approveHash!, // this comes from wagmi hook automatically
       });
@@ -109,6 +113,10 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
       //   await axios.put(`${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`, {
       //     txHash: `${txHash}`,
       //   });
+
+      while (!mintHash) {
+        await new Promise((res) => setTimeout(res, 500));
+      }
 
       await publicClient?.waitForTransactionReceipt({ hash: mintHash! });
       setStatus('✅ NFT minted successfully!');
