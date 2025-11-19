@@ -5,7 +5,7 @@ import {
   useWriteContract,
   useBalance,
   usePublicClient,
-  useWaitForTransactionReceipt,
+  //   useWaitForTransactionReceipt,
 } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
 
@@ -14,6 +14,7 @@ import { Box } from './Box';
 import axios from 'axios';
 import { contractABI } from '../abi/mintAbi';
 import { USDC_ABI } from '../abi/usdcAbi';
+// import { waitForTransactionReceipt } from 'viem/actions';
 
 const ABI = contractABI;
 
@@ -36,18 +37,21 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   const [status, setStatus] = useState<string | null>(null);
   console.log('status:', status);
 
-  const { writeContract, data: txHash } = useWriteContract();
+  //   const { writeContract, data: txHash } = useWriteContract();
+  const { writeContract: approveUSDC, data: approveHash } = useWriteContract();
+  const { writeContract: mintNFT, data: mintHash } = useWriteContract();
 
-  const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({
-    hash: txHash,
-  });
+  //   const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({
+  //     hash: txHash,
+  //   });
+  //   console.log('txHash:', txHash);
 
-  useEffect(() => {
-    if (isConfirmed) {
-      setStatus('✅ Transaction confirmed! NFT minted successfully.');
-      console.log('txHash:', txHash);
-    }
-  }, [isConfirmed]);
+  //   useEffect(() => {
+  //     if (isConfirmed) {
+  //       setStatus('✅ Transaction confirmed! NFT minted successfully.');
+  //     //   console.log('txHash:', txHash);
+  //     }
+  //   }, [isConfirmed]);
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -78,8 +82,9 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
 
       const amountUSDC = BigInt(1 * 1e6);
       const receiverWallet = '0x2990731080E4511D12892F96D5CDa51bF1B9D56c';
+      setStatus('🔄 Step 1/2: Approving USDC...');
 
-      await writeContract({
+      approveUSDC({
         address: USDC_ADDRESS,
         abi: USDC_ABI,
         functionName: 'approve',
@@ -87,7 +92,13 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
         chainId: baseSepolia.id,
       });
 
-      await writeContract({
+      const approveReceipt = await publicClient?.waitForTransactionReceipt({
+        hash: approveHash!, // this comes from wagmi hook automatically
+      });
+      console.log('approveReceipt:', approveReceipt);
+      setStatus('🔄 Step 2/2: Minting NFT...');
+
+      mintNFT({
         address: CONTRACT_ADDRESS,
         abi: ABI,
         functionName: 'mint',
@@ -95,10 +106,11 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
         chainId: baseSepolia.id,
       });
 
-      await axios.put(`${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`, {
-        txHash: `${txHash}`,
-      });
+      //   await axios.put(`${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`, {
+      //     txHash: `${txHash}`,
+      //   });
 
+      await publicClient?.waitForTransactionReceipt({ hash: mintHash! });
       setStatus('✅ NFT minted successfully!');
     } catch (err) {
       console.error(err);
