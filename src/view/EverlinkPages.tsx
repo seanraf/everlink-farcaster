@@ -16,7 +16,7 @@ import type { UrlButton } from '../types';
 export default function EverlinkPages() {
   const { user } = useAuth();
   const { context } = useFrameContext();
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(2);
   const [userName, setUserName] = useState('');
   const [bio, setBio] = useState('');
   const [analyticsTag, setAnalyticsTag] = useState('');

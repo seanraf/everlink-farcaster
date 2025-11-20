@@ -62,6 +62,27 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
     fetchBalance();
   }, [address, publicClient]);
 
+  useEffect(() => {
+    const fetchUSDCBalance = async () => {
+      if (!address || !publicClient) return;
+
+      const balance = await publicClient.readContract({
+        address: USDC_ADDRESS,
+        abi: USDC_ABI,
+        functionName: 'balanceOf',
+        args: [address],
+      });
+
+      console.log('USDC Balance (raw):', balance);
+
+      // Convert from 6 decimals → human readable
+      const formatted = Number(balance) / 1_000_000;
+      console.log('USDC Balance:', formatted);
+    };
+
+    fetchUSDCBalance();
+  }, [address, publicClient]);
+
   const handleMint = async () => {
     if (!isConnected) {
       setStatus('⚠️ Please connect your Farcaster wallet first.');
@@ -70,15 +91,16 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
 
     try {
       const response = await axios.get(
-        `${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`
+        // `${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`
+        `${backendBaseUrl}/api/deploymentHistory/691efb6829de4f00073ddffd`
       );
       const deploymentRecords = response.data.records;
       if (deploymentRecords) {
         setArweaveTransactionId(deploymentRecords.arweaveUrl);
+        console.log('arweaveTransactionId:', arweaveTransactionId);
       } else {
         console.error('No deployment records found.');
       }
-      console.log('arweaveTransactionId:', arweaveTransactionId);
 
       const amountUSDC = 1_000_000n;
       const receiverWallet = '0x2990731080E4511D12892F96D5CDa51bF1B9D56c';
