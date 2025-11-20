@@ -23,6 +23,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   //   const contractAddress = import.meta.env.VITE_SMART_CONTRACT_ADDRESS as string;
   const CONTRACT_ADDRESS = '0xD187Bef30c558727B07A59249223bD45F567AAf6';
   const USDC_ADDRESS = '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
+  console.log(ipfsTaskId);
 
   const [arweaveTransactionId, setArweaveTransactionId] = useState('');
   const { address, isConnected } = useAccount();
