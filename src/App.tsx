@@ -12,8 +12,8 @@ import CrossmintProviders from './providers/Crossmint';
 import { WagmiProvider } from 'wagmi';
 import { config } from './lib/wegmiConfig';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { OnchainKitProvider } from '@coinbase/onchainkit';
-import { sepolia } from 'viem/chains';
+// import { OnchainKitProvider } from '@coinbase/onchainkit';
+// import { sepolia } from 'viem/chains';
 
 const queryClient = new QueryClient();
 
@@ -22,26 +22,26 @@ function App() {
     <>
       <CrossmintProviders>
         <FarcasterFrameProvider>
-          <OnchainKitProvider
+          {/* <OnchainKitProvider
             apiKey='Atp1YiODMDlZg8kVALmA51Q450rZedxr'
             chain={sepolia}
             projectId='b56fbc8d-e69b-417e-9118-e33967b22bfa'
-          >
-            <WagmiProvider config={config}>
-              <QueryClientProvider client={queryClient}>
-                <ContextProvider>
-                  <NavBar />
-                  <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path='/success' element={<SuccessCase />} />
-                    <Route path='/failure' element={<Failure />} />
-                    <Route path='/success/:id' element={<Success />} />
-                  </Routes>
-                  <Footer />
-                </ContextProvider>
-              </QueryClientProvider>
-            </WagmiProvider>
-          </OnchainKitProvider>
+          > */}
+          <WagmiProvider config={config}>
+            <QueryClientProvider client={queryClient}>
+              <ContextProvider>
+                <NavBar />
+                <Routes>
+                  <Route path='/' element={<Home />} />
+                  <Route path='/success' element={<SuccessCase />} />
+                  <Route path='/failure' element={<Failure />} />
+                  <Route path='/success/:id' element={<Success />} />
+                </Routes>
+                <Footer />
+              </ContextProvider>
+            </QueryClientProvider>
+          </WagmiProvider>
+          {/* </OnchainKitProvider> */}
         </FarcasterFrameProvider>
       </CrossmintProviders>
     </>

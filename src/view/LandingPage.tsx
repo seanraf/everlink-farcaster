@@ -1,5 +1,8 @@
 import { useAuth } from '@crossmint/client-sdk-react-ui';
 import { Box } from '../components/Box';
+// import ConnectMetamask from '../components/ConnectMetamask';
+// import UsdcInMetamask from '../components/UsdcInMetamask';
+// import MintUsingMetamask from '../components/MintUsingMetamask';
 
 export default function LandingPage() {
   const { login, user } = useAuth();
@@ -42,6 +45,12 @@ export default function LandingPage() {
             </button>
           )}
         </Box>
+        {/* <Box>
+          <ConnectMetamask />
+          <UsdcInMetamask />
+          <hr />
+          <MintUsingMetamask />
+        </Box> */}
         <Box>
           <img
             src={'/HomeMainImage.svg'}
