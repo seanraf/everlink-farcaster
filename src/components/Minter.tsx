@@ -9,7 +9,7 @@ import {
 } from 'wagmi';
 import { base } from 'wagmi/chains';
 
-import { formatEther } from 'viem';
+import { createPublicClient, formatEther, formatUnits, http } from 'viem';
 import { Box } from './Box';
 // import axios from 'axios';
 // import { contractABI } from '../abi/mintAbi';
@@ -17,6 +17,17 @@ import { Box } from './Box';
 // import { waitForTransactionReceipt } from 'viem/actions';
 
 // const ABI = contractABI;
+
+const USDC = '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913';
+const ERC20_ABI = [
+  'function balanceOf(address owner) view returns (uint256)',
+  'function decimals() view returns (uint8)',
+];
+
+const client = createPublicClient({
+  chain: base,
+  transport: http(),
+});
 
 export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   // const backendBaseUrl = import.meta.env.VITE_BACKEND_BASE_URL as string;
@@ -37,7 +48,39 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   console.log('balanceData:', balanceData);
   const [status, setStatus] = useState<string | null>(null);
   console.log('status:', status);
+  console.log('Address', address);
 
+  const [nativeBalance, setNativeBalance] = useState<string | null>(null);
+  const [usdcBalance, setUsdcBalance] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        // Native BASE balance
+        const bal = await client.getBalance({ address: address! });
+        setNativeBalance(formatEther(bal));
+
+        // USDC token balance
+        const raw = await client.readContract({
+          address: USDC,
+          abi: ERC20_ABI,
+          functionName: 'balanceOf',
+          args: [address],
+        });
+        const decimals = await client.readContract({
+          address: USDC,
+          abi: ERC20_ABI,
+          functionName: 'decimals',
+        });
+        setUsdcBalance(formatUnits(raw as bigint, Number(decimals)));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetch();
+  }, []);
+  console.log(`Native (BASE): ${nativeBalance ?? 'Loading...'}`);
+  console.log(`USDC: ${usdcBalance ?? 'Loading...'}`);
   //   const { writeContract, data: txHash } = useWriteContract();
   // const { writeContract: approveUSDC, data: approveHash } = useWriteContract();
   // const { writeContract: mintNFT, data: mintHash } = useWriteContract();
