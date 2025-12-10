@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { createPublicClient, http } from 'viem';
 import { base } from 'viem/chains';
 import { useAccount, useConnect, useReconnect } from 'wagmi';
@@ -9,6 +9,8 @@ const client = createPublicClient({
 });
 
 const MintComponent = () => {
+  const [bal, setBal] = useState<bigint | null>(null);
+
   const { isConnected, address, status } = useAccount();
   const { connect, connectors } = useConnect();
   const { reconnect } = useReconnect();
@@ -33,12 +35,14 @@ const MintComponent = () => {
     }
     const bal = await client.getBalance({ address: address! });
     console.log('bal', bal);
+    setBal(bal);
   };
 
   return (
     <div style={{ padding: 20 }}>
       <h2>Farcaster Wallet Test Flow</h2>
       <p>Status: {status}</p>
+      <p>Balance: {bal !== null ? bal.toString() : 'N/A'}</p>
 
       <button
         onClick={handleFlow}
