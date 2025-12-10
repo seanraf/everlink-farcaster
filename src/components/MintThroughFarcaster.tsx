@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { createPublicClient, http } from 'viem';
 import { base } from 'viem/chains';
 import { useAccount, useConnect, useReconnect } from 'wagmi';
