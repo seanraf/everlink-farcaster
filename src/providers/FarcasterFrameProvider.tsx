@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import FrameSDK from '@farcaster/frame-sdk';
+import { sdk } from '@farcaster/miniapp-sdk';
 
 function FarcasterFrameProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const load = async () => {
-      FrameSDK.actions.ready();
+      await sdk.actions.ready();
     };
     load();
   }, []);
