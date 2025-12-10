@@ -1,21 +1,38 @@
 import React, { useEffect } from 'react';
-import { useAccount, useConnect } from 'wagmi';
+import { createPublicClient, http } from 'viem';
+import { base } from 'viem/chains';
+import { useAccount, useConnect, useReconnect } from 'wagmi';
 
-const MintComponent: React.FC = () => {
-  const { isConnected, address } = useAccount();
+const client = createPublicClient({
+  chain: base,
+  transport: http(),
+});
+
+const MintComponent = () => {
+  const { isConnected, address, status } = useAccount();
   const { connect, connectors } = useConnect();
+  const { reconnect } = useReconnect();
 
   useEffect(() => {
+    reconnect();
     if (!isConnected && connectors.length > 0) {
+      console.log('Attempting to connect...');
       connect({ connector: connectors[0] });
     }
-  }, [isConnected, connect, connectors]);
+  }, [isConnected, connect, connectors, reconnect]);
 
   console.log('MintComponent - isConnected:', isConnected);
   console.log('MintComponent - connectors:', connectors);
   console.log('address:', address);
 
-  const handleFlow = async () => {};
+  const handleFlow = async () => {
+    if (!address) {
+      console.log('No wallet connected');
+      return;
+    }
+    const bal = await client.getBalance({ address: address! });
+    console.log('bal', bal);
+  };
 
   return (
     <div style={{ padding: 20 }}>

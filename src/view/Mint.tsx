@@ -1,12 +1,12 @@
 import { Box } from '../components/Box';
 import Loader from './Loader';
 import type { MinterProps } from '../types';
-import Minter from '../components/Minter';
+// import Minter from '../components/Minter';
 import MintComponent from '../components/MintThroughFarcaster';
 
 export default function Mint({
   renderThemePreview,
-  ipfsTaskId,
+  // ipfsTaskId,
   loading,
 }: MinterProps) {
   return (
@@ -47,7 +47,7 @@ export default function Mint({
                 </span>
               </Box>
               <Box className='mx-2 my-1'>
-                <Minter ipfsTaskId={ipfsTaskId} />
+                {/* <Minter ipfsTaskId={ipfsTaskId} /> */}
               </Box>
             </Box>
             <MintComponent />
