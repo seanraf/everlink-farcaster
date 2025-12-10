@@ -26,6 +26,7 @@ const MintComponent = () => {
   console.log('address:', address);
 
   const handleFlow = async () => {
+    connect({ connector: connectors[0] });
     if (!address) {
       console.log('No wallet connected');
       return;
@@ -45,6 +46,7 @@ const MintComponent = () => {
           padding: '10px 20px',
           fontSize: '16px',
           marginTop: '10px',
+          border: '2px solid black',
         }}
       >
         Start Test
