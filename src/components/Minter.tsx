@@ -1,15 +1,20 @@
 'use client';
 import { useState, useEffect } from 'react';
 import {
-  useAccount,
   // useWriteContract,
   useBalance,
   usePublicClient,
   //   useWaitForTransactionReceipt,
 } from 'wagmi';
-import { base } from 'wagmi/chains';
+import { baseSepolia } from 'wagmi/chains';
 
-import { createPublicClient, formatEther, formatUnits, http } from 'viem';
+import {
+  createPublicClient,
+  formatEther,
+  formatUnits,
+  http,
+  parseAbi,
+} from 'viem';
 import { Box } from './Box';
 // import axios from 'axios';
 // import { contractABI } from '../abi/mintAbi';
@@ -19,13 +24,13 @@ import { Box } from './Box';
 // const ABI = contractABI;
 
 const USDC = '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913';
-const ERC20_ABI = [
+const ERC20_ABI = parseAbi([
   'function balanceOf(address owner) view returns (uint256)',
   'function decimals() view returns (uint8)',
-];
+]);
 
 const client = createPublicClient({
-  chain: base,
+  chain: baseSepolia,
   transport: http(),
 });
 
@@ -37,16 +42,17 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   console.log(ipfsTaskId);
 
   // const [arweaveTransactionId, setArweaveTransactionId] = useState('');
-  const { address, isConnected } = useAccount();
+  // const { address, isConnected } = useAccount();
+  const address = '0xb7eDc34F75E71d927bC86C5bDf8b8883B89C8ef6';
   const { data: balanceData } = useBalance({
     address,
-    chainId: base.id,
+    chainId: baseSepolia.id,
   });
 
   const publicClient = usePublicClient();
 
   console.log('balanceData:', balanceData);
-  const [status, setStatus] = useState<string | null>(null);
+  const [status] = useState<string | null>(null);
   console.log('status:', status);
   console.log('Address', address);
 
@@ -56,8 +62,16 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   useEffect(() => {
     const fetch = async () => {
       try {
+        const code = await client.getCode({ address: USDC });
+        console.log('USDC contract code on this chain:', code);
+        if (code === '0x') {
+          console.error('❌ No contract found at USDC address on this chain');
+          return;
+        }
+
         // Native BASE balance
         const bal = await client.getBalance({ address: address! });
+        console.log('bal', bal);
         setNativeBalance(formatEther(bal));
 
         // USDC token balance
@@ -81,6 +95,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   }, []);
   console.log(`Native (BASE): ${nativeBalance ?? 'Loading...'}`);
   console.log(`USDC: ${usdcBalance ?? 'Loading...'}`);
+
   //   const { writeContract, data: txHash } = useWriteContract();
   // const { writeContract: approveUSDC, data: approveHash } = useWriteContract();
   // const { writeContract: mintNFT, data: mintHash } = useWriteContract();
@@ -128,11 +143,6 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   // }, [address, publicClient]);
 
   const handleMint = async () => {
-    if (!isConnected) {
-      setStatus('⚠️ Please connect your Farcaster wallet first.');
-      return;
-    }
-
     // try {
     //   const response = await axios.get(
     //     // `${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`

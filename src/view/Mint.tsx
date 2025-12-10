@@ -2,6 +2,7 @@ import { Box } from '../components/Box';
 import Loader from './Loader';
 import type { MinterProps } from '../types';
 import Minter from '../components/Minter';
+import MintComponent from '../components/MintThroughFarcaster';
 
 export default function Mint({
   renderThemePreview,
@@ -49,6 +50,7 @@ export default function Mint({
                 <Minter ipfsTaskId={ipfsTaskId} />
               </Box>
             </Box>
+            <MintComponent />
           </Box>
           <Box className='flex-1 flex justify-center items-center md:w-[50%]'>
             <Box className='render-theme-minter mb-4 flex md:ml-auto'>
