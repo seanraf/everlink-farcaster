@@ -3,6 +3,7 @@ import Loader from './Loader';
 import type { MinterProps } from '../types';
 // import Minter from '../components/Minter';
 import MintComponent from '../components/MintThroughFarcaster';
+import ConnectMenu from '../components/ConnectMenu';
 
 export default function Mint({
   renderThemePreview,
@@ -51,6 +52,8 @@ export default function Mint({
               </Box>
             </Box>
             <MintComponent />
+            <hr />
+            <ConnectMenu />
           </Box>
           <Box className='flex-1 flex justify-center items-center md:w-[50%]'>
             <Box className='render-theme-minter mb-4 flex md:ml-auto'>
