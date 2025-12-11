@@ -16,7 +16,8 @@ const client = createPublicClient({
 });
 
 const USDC_BASE_SEPOLIA_ADDRESS: Address =
-  '0x833589fCD6eDbB0E46F4dAdC5266c29F6A0aeBAb';
+  // '0x833589fCD6eDbB0E46F4dAdC5266c29F6A0aeBAb';
+  '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
 const USDC_DECIMALS = 6;
 
 const ERC20_ABI: Abi = [
