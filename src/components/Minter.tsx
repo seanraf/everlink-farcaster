@@ -6,14 +6,14 @@ import {
   usePublicClient,
   //   useWaitForTransactionReceipt,
 } from 'wagmi';
-import { base, baseSepolia } from 'wagmi/chains';
+import { base } from 'wagmi/chains';
 
 import {
   createPublicClient,
   formatEther,
-  formatUnits,
+  // formatUnits,
   http,
-  parseAbi,
+  // parseAbi,
 } from 'viem';
 import { Box } from './Box';
 // import axios from 'axios';
