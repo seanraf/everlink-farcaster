@@ -6,7 +6,7 @@ import {
   usePublicClient,
   //   useWaitForTransactionReceipt,
 } from 'wagmi';
-import { baseSepolia } from 'wagmi/chains';
+import { base, baseSepolia } from 'wagmi/chains';
 
 import {
   createPublicClient,
@@ -24,13 +24,13 @@ import { Box } from './Box';
 // const ABI = contractABI;
 
 const USDC = '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913';
-const ERC20_ABI = parseAbi([
-  'function balanceOf(address owner) view returns (uint256)',
-  'function decimals() view returns (uint8)',
-]);
+// const ERC20_ABI = parseAbi([
+//   'function balanceOf(address owner) view returns (uint256)',
+//   'function decimals() view returns (uint8)',
+// ]);
 
 const client = createPublicClient({
-  chain: baseSepolia,
+  chain: base,
   transport: http(),
 });
 
@@ -43,10 +43,11 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
 
   // const [arweaveTransactionId, setArweaveTransactionId] = useState('');
   // const { address, isConnected } = useAccount();
-  const address = '0xb7eDc34F75E71d927bC86C5bDf8b8883B89C8ef6';
+  // const address = '0xb7eDc34F75E71d927bC86C5bDf8b8883B89C8ef6';
+  const address = '0xEDA1896bDf3908c2e480492ecfF0491a50D380eD';
   const { data: balanceData } = useBalance({
     address,
-    chainId: baseSepolia.id,
+    chainId: base.id,
   });
 
   const publicClient = usePublicClient();
@@ -57,13 +58,13 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   console.log('Address', address);
 
   const [nativeBalance, setNativeBalance] = useState<string | null>(null);
-  const [usdcBalance, setUsdcBalance] = useState<string | null>(null);
+  // const [usdcBalance, setUsdcBalance] = useState<string | null>(null);
 
   useEffect(() => {
     const fetch = async () => {
       try {
         const code = await client.getCode({ address: USDC });
-        console.log('USDC contract code on this chain:', code);
+        // console.log('USDC contract code on this chain:', code);
         if (code === '0x') {
           console.error('❌ No contract found at USDC address on this chain');
           return;
@@ -75,18 +76,18 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
         setNativeBalance(formatEther(bal));
 
         // USDC token balance
-        const raw = await client.readContract({
-          address: USDC,
-          abi: ERC20_ABI,
-          functionName: 'balanceOf',
-          args: [address],
-        });
-        const decimals = await client.readContract({
-          address: USDC,
-          abi: ERC20_ABI,
-          functionName: 'decimals',
-        });
-        setUsdcBalance(formatUnits(raw as bigint, Number(decimals)));
+        // const raw = await client.readContract({
+        //   address: USDC,
+        //   abi: ERC20_ABI,
+        //   functionName: 'balanceOf',
+        //   args: [address],
+        // });
+        // const decimals = await client.readContract({
+        //   address: USDC,
+        //   abi: ERC20_ABI,
+        //   functionName: 'decimals',
+        // });
+        // setUsdcBalance(formatUnits(raw as bigint, Number(decimals)));
       } catch (err) {
         console.error(err);
       }
@@ -94,7 +95,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
     fetch();
   }, []);
   console.log(`Native (BASE): ${nativeBalance ?? 'Loading...'}`);
-  console.log(`USDC: ${usdcBalance ?? 'Loading...'}`);
+  // console.log(`USDC: ${usdcBalance ?? 'Loading...'}`);
 
   //   const { writeContract, data: txHash } = useWriteContract();
   // const { writeContract: approveUSDC, data: approveHash } = useWriteContract();

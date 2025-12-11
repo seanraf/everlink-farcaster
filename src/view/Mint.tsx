@@ -4,6 +4,7 @@ import type { MinterProps } from '../types';
 // import Minter from '../components/Minter';
 import MintComponent from '../components/MintThroughFarcaster';
 import ConnectMenu from '../components/ConnectMenu';
+// import Minter from '../components/Minter';
 
 export default function Mint({
   renderThemePreview,
