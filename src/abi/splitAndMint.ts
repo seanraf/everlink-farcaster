@@ -1,17 +1,6 @@
-export const BASE_MINT_NFT_ABI = [
+export const splitAndMintAbi = [
   {
-    inputs: [
-      {
-        internalType: 'string',
-        name: 'name',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: 'symbol',
-        type: 'string',
-      },
-    ],
+    inputs: [],
     stateMutability: 'nonpayable',
     type: 'constructor',
   },
@@ -119,28 +108,6 @@ export const BASE_MINT_NFT_ABI = [
     type: 'error',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'owner',
-        type: 'address',
-      },
-    ],
-    name: 'OwnableInvalidOwner',
-    type: 'error',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
-    name: 'OwnableUnauthorizedAccount',
-    type: 'error',
-  },
-  {
     anonymous: false,
     inputs: [
       {
@@ -194,32 +161,37 @@ export const BASE_MINT_NFT_ABI = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
+        internalType: 'address',
+        name: 'minter',
+        type: 'address',
+      },
+      {
+        indexed: true,
         internalType: 'uint256',
-        name: '_fromTokenId',
+        name: 'tokenId',
         type: 'uint256',
       },
       {
         indexed: false,
-        internalType: 'uint256',
-        name: '_toTokenId',
-        type: 'uint256',
+        internalType: 'string',
+        name: 'arweaveHash',
+        type: 'string',
       },
-    ],
-    name: 'BatchMetadataUpdate',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
       {
         indexed: false,
         internalType: 'uint256',
-        name: '_tokenId',
+        name: 'totalPaid',
         type: 'uint256',
       },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'payoutWallet',
+        type: 'address',
+      },
     ],
-    name: 'MetadataUpdate',
+    name: 'Minted',
     type: 'event',
   },
   {
@@ -228,17 +200,17 @@ export const BASE_MINT_NFT_ABI = [
       {
         indexed: true,
         internalType: 'address',
-        name: 'previousOwner',
+        name: 'payoutWallet',
         type: 'address',
       },
       {
-        indexed: true,
-        internalType: 'address',
-        name: 'newOwner',
-        type: 'address',
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
       },
     ],
-    name: 'OwnershipTransferred',
+    name: 'PayoutSent',
     type: 'event',
   },
   {
@@ -268,20 +240,7 @@ export const BASE_MINT_NFT_ABI = [
   },
   {
     inputs: [],
-    name: 'MAX_SUPPLY',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'MINT_PRICE',
+    name: 'PLATFORM_FEE',
     outputs: [
       {
         internalType: 'uint256',
@@ -313,6 +272,25 @@ export const BASE_MINT_NFT_ABI = [
   {
     inputs: [
       {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'arweaveHashes',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'address',
         name: 'owner',
         type: 'address',
@@ -324,6 +302,19 @@ export const BASE_MINT_NFT_ABI = [
         internalType: 'uint256',
         name: '',
         type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'feeReceiver',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
       },
     ],
     stateMutability: 'view',
@@ -375,9 +366,9 @@ export const BASE_MINT_NFT_ABI = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'recipient',
-        type: 'address',
+        internalType: 'string',
+        name: 'arweaveHash',
+        type: 'string',
       },
     ],
     name: 'mint',
@@ -393,19 +384,6 @@ export const BASE_MINT_NFT_ABI = [
         internalType: 'string',
         name: '',
         type: 'string',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'owner',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
       },
     ],
     stateMutability: 'view',
@@ -432,9 +410,15 @@ export const BASE_MINT_NFT_ABI = [
   },
   {
     inputs: [],
-    name: 'renounceOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    name: 'payoutWallet',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -509,24 +493,6 @@ export const BASE_MINT_NFT_ABI = [
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'tokenId',
-        type: 'uint256',
-      },
-      {
-        internalType: 'string',
-        name: 'arweaveLink',
-        type: 'string',
-      },
-    ],
-    name: 'setTokenURI',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
         internalType: 'bytes4',
         name: 'interfaceId',
         type: 'bytes4',
@@ -551,6 +517,19 @@ export const BASE_MINT_NFT_ABI = [
         internalType: 'string',
         name: '',
         type: 'string',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'tokenIdCounter',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -594,26 +573,6 @@ export const BASE_MINT_NFT_ABI = [
       },
     ],
     name: 'transferFrom',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'newOwner',
-        type: 'address',
-      },
-    ],
-    name: 'transferOwnership',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'withdraw',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',

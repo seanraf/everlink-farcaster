@@ -2,8 +2,7 @@ import { Box } from '../components/Box';
 import Loader from './Loader';
 import type { MinterProps } from '../types';
 // import Minter from '../components/Minter';
-import MintComponent from '../components/MintThroughFarcaster';
-import ConnectMenu from '../components/ConnectMenu';
+import Minter2 from '../components/Minter2';
 // import Minter from '../components/Minter';
 
 export default function Mint({
@@ -52,9 +51,10 @@ export default function Mint({
                 {/* <Minter ipfsTaskId={ipfsTaskId} /> */}
               </Box>
             </Box>
-            <MintComponent />
+            <Minter2 />
+            {/* <MintComponent /> */}
             <hr />
-            <ConnectMenu />
+            {/* <ConnectMenu /> */}
           </Box>
           <Box className='flex-1 flex justify-center items-center md:w-[50%]'>
             <Box className='render-theme-minter mb-4 flex md:ml-auto'>
