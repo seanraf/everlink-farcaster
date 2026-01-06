@@ -57,7 +57,6 @@ export default function ETHPrice() {
           abi: chainlinkAbi,
           functionName: 'latestRoundData',
         });
-        console.log('Chainlink ETH Price Result:', result);
         const price = Number((result as bigint[])[1]);
         setEthPrice(price / 1e8);
       } catch (err) {

@@ -125,6 +125,7 @@ export default function Minter() {
       >
         {isPending ? 'Minting...' : 'Mint'}
       </span>
+      <p className='text-white mt-2 text-sm'>Wallet Address: {address}</p>
       <p className='text-white mt-2 text-sm'>{status}</p>
 
       {balanceData && (
