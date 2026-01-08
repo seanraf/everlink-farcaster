@@ -45,9 +45,11 @@ const basePublicClient = createPublicClient({
 });
 
 const ETH_USD_FEED = '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419';
+const USD_AMOUNT = 4;
 
 export default function ETHPrice() {
   const [ethPrice, setEthPrice] = useState<number | null>(null);
+  const [ethFor5USD, setEthFor5USD] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchPrice = async () => {
@@ -58,7 +60,11 @@ export default function ETHPrice() {
           functionName: 'latestRoundData',
         });
         const price = Number((result as bigint[])[1]);
-        setEthPrice(price / 1e8);
+        const ethPriceUSD = price / 1e8;
+        setEthPrice(ethPriceUSD);
+
+        const ethAmount = USD_AMOUNT / ethPriceUSD;
+        setEthFor5USD(ethAmount);
       } catch (err) {
         console.error('ETH price fetch failed:', err);
       }
@@ -69,9 +75,14 @@ export default function ETHPrice() {
 
   return (
     <Box>
-      {ethPrice
-        ? `ETH Price (~$${ethPrice.toFixed(2)})`
-        : 'Loading ETH price...'}
+      {ethPrice ? (
+        <>
+          <p>ETH Price: ~${ethPrice.toFixed(2)}</p>
+          <p>$5 ≈ {ethFor5USD?.toFixed(6)} ETH</p>
+        </>
+      ) : (
+        'Loading ETH price...'
+      )}
     </Box>
   );
 }

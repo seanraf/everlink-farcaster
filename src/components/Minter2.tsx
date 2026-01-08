@@ -24,7 +24,7 @@ export default function Minter() {
     chainId: baseSepolia.id,
   });
 
-  const publicClient = usePublicClient();
+  const publicClient = usePublicClient({ chainId: baseSepolia.id });
 
   // const RECEIVER_WALLET_ADDRESS = '0x2990731080E4511D12892F96D5CDa51bF1B9D56c';
   const MINT_PRICE = '0.001';
@@ -41,6 +41,13 @@ export default function Minter() {
   const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({
     hash: txHash,
   });
+
+  useEffect(() => {
+    if (!publicClient) return;
+    publicClient.getChainId().then((id) => {
+      console.log('Public Client Chain ID:', id);
+    });
+  }, [publicClient]);
 
   useEffect(() => {
     if (isConfirmed) {
