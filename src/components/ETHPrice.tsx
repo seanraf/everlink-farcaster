@@ -78,7 +78,9 @@ export default function ETHPrice() {
       {ethPrice ? (
         <>
           <p>ETH Price: ~${ethPrice.toFixed(2)}</p>
-          <p>$5 ≈ {ethFor5USD?.toFixed(6)} ETH</p>
+          <p>
+            ${USD_AMOUNT} ≈ {ethFor5USD?.toFixed(6)} ETH
+          </p>
         </>
       ) : (
         'Loading ETH price...'
