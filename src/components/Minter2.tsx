@@ -167,7 +167,7 @@ const CONTRACT_ADDRESS = '0x9621473C88f95589aB21408f773555cf8839E26A';
 export default function Minter() {
   const [gasFee, setGasFee] = useState<bigint | null>(null);
   const [totalCost, setTotalCost] = useState<bigint | null>(null);
-  const [insufficientBalanceOpen, setInsufficientBalanceOpen] = useState(true);
+  const [insufficientBalanceOpen, setInsufficientBalanceOpen] = useState(false);
   const [transactionCompleted, setTransactionCompleted] = useState(false);
   const { address, isConnected } = useAccount();
   const { data: balanceData } = useBalance({
@@ -220,14 +220,24 @@ export default function Minter() {
       try {
         const mintValue = parseEther(MINT_PRICE);
 
-        const estimatedGas = await publicClient.estimateContractGas({
-          address: CONTRACT_ADDRESS,
-          abi: splitAndMintAbi,
-          functionName: 'mint',
-          args: ['Gme9IFaNz-iSL77u5j0CxQJ1rrjXZgaNOIQwDUocU0Y'],
-          value: mintValue,
-          account: address,
-        });
+        let estimatedGas;
+        try {
+          estimatedGas = await publicClient.estimateContractGas({
+            address: CONTRACT_ADDRESS,
+            abi: splitAndMintAbi,
+            functionName: 'mint',
+            args: ['Gme9IFaNz-iSL77u5j0CxQJ1rrjXZgaNOIQwDUocU0Y'],
+            value: mintValue,
+            account: address,
+          });
+        } catch (estimationError) {
+          // If estimation fails (e.g., insufficient balance), use a default estimate
+          console.warn(
+            'Gas estimation failed, using default estimate:',
+            estimationError
+          );
+          estimatedGas = BigInt(150000); // Default gas estimate for mint transaction
+        }
 
         const gasPrice = await publicClient.getGasPrice();
 
