@@ -158,7 +158,7 @@ import { formatEther, parseEther, encodeFunctionData, toHex } from 'viem';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Box } from './Box';
 import { splitAndMintAbi } from '../abi/splitAndMint';
-import ETHPrice from './ETHPrice';
+// import ETHPrice from './ETHPrice';
 import miniAppSdk from '@farcaster/miniapp-sdk';
 import { sdk } from '@farcaster/miniapp-sdk';
 
@@ -337,7 +337,7 @@ export default function Minter() {
             </p>
           </div>
         )}
-        <ETHPrice />
+        {/* <ETHPrice /> */}
       </Box>
 
       {/* Insufficient Balance Modal */}
