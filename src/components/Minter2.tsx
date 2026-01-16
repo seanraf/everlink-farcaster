@@ -167,7 +167,7 @@ const CONTRACT_ADDRESS = '0x9621473C88f95589aB21408f773555cf8839E26A';
 export default function Minter() {
   const [gasFee, setGasFee] = useState<bigint | null>(null);
   const [totalCost, setTotalCost] = useState<bigint | null>(null);
-  const [insufficientBalanceOpen, setInsufficientBalanceOpen] = useState(false);
+  const [insufficientBalanceOpen, setInsufficientBalanceOpen] = useState(true);
   const [transactionCompleted, setTransactionCompleted] = useState(false);
   const { address, isConnected } = useAccount();
   const { data: balanceData } = useBalance({
@@ -336,8 +336,8 @@ export default function Minter() {
         onOpenChange={setInsufficientBalanceOpen}
       >
         <Dialog.Portal>
-          <Dialog.Overlay className='fixed inset-0 bg-black/50 z-40' />
-          <Dialog.Content className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg p-6 w-96 max-w-[90%] z-50'>
+          <Dialog.Overlay className='fixed inset-0 bg-black/50 z-40 display:flex justify-center items-center' />
+          <Dialog.Content className='fixed top-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg p-6 max-w-[90%] z-50 left-0 right-0 mx-auto w-full max-w-md'>
             <div className='flex justify-between items-center mb-4'>
               <Dialog.Title className='text-lg font-bold text-gray-900'>
                 Insufficient Balance
@@ -378,7 +378,7 @@ export default function Minter() {
               )}
             </div>
             <Dialog.Close asChild>
-              <button className='w-full bg-[#1ab4a3] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#0f9a8b] transition'>
+              <button className='w-full bg-[#1ab4a3] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#0f9a8b] transition border-none'>
                 Close
               </button>
             </Dialog.Close>
