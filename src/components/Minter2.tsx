@@ -352,14 +352,14 @@ export default function Minter() {
               <Dialog.Title className='text-lg font-bold text-gray-900'>
                 Insufficient Balance
               </Dialog.Title>
-              <Dialog.Close asChild>
+              {/* <Dialog.Close asChild>
                 <button
                   className='text-gray-500 hover:text-gray-700 text-xl leading-none'
                   aria-label='Close'
                 >
                   ✕
                 </button>
-              </Dialog.Close>
+              </Dialog.Close> */}
             </div>
             <Dialog.Description className='text-gray-700 mb-6'>
               You have insufficient balance. We need at least{' '}
@@ -387,11 +387,11 @@ export default function Minter() {
                 </p>
               )}
             </div>
-            {/* <Dialog.Close asChild>
+            <Dialog.Close asChild>
               <button className='w-full bg-[#1ab4a3] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#0f9a8b] transition border-none'>
                 Close
               </button>
-            </Dialog.Close> */}
+            </Dialog.Close>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
