@@ -26,17 +26,13 @@
 
 //   const publicClient = usePublicClient({ chainId: baseSepolia.id });
 
-//   // const RECEIVER_WALLET_ADDRESS = '0x2990731080E4511D12892F96D5CDa51bF1B9D56c';
 //   const MINT_PRICE = '0.001';
 
 //   console.log('balanceData:', balanceData);
 //   const [status, setStatus] = useState<string | null>(null);
 //   console.log('status:', status);
 
-//   // const link = 'https://ar-io.net/Gme9IFaNz-iSL77u5j0CxQJ1rrjXZgaNOIQwDUocU0Y';
 //   const { data: txHash, writeContract, isPending } = useWriteContract();
-
-//   // Wait for the transaction receipt
 
 //   const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({
 //     hash: txHash,
@@ -75,10 +71,7 @@
 //           address: CONTRACT_ADDRESS,
 //           abi: splitAndMintAbi,
 //           functionName: 'mint',
-//           args: [
-//             'Gme9IFaNz-iSL77u5j0CxQJ1rrjXZgaNOIQwDUocU0Y',
-//             // RECEIVER_WALLET_ADDRESS,
-//           ],
+//           args: ['Gme9IFaNz-iSL77u5j0CxQJ1rrjXZgaNOIQwDUocU0Y'],
 //           value: mintValue,
 //           account: address,
 //         });
@@ -111,10 +104,7 @@
 //         address: CONTRACT_ADDRESS,
 //         abi: splitAndMintAbi,
 //         functionName: 'mint',
-//         args: [
-//           'Gme9IFaNz-iSL77u5j0CxQJ1rrjXZgaNOIQwDUocU0Y',
-//           // RECEIVER_WALLET_ADDRESS,
-//         ],
+//         args: ['Gme9IFaNz-iSL77u5j0CxQJ1rrjXZgaNOIQwDUocU0Y'],
 //         value: parseEther(MINT_PRICE),
 //         chainId: baseSepolia.id,
 //       });
@@ -165,6 +155,7 @@ import {
 } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
 import { formatEther, parseEther, encodeFunctionData, toHex } from 'viem';
+import * as Dialog from '@radix-ui/react-dialog';
 import { Box } from './Box';
 import { splitAndMintAbi } from '../abi/splitAndMint';
 import ETHPrice from './ETHPrice';
@@ -176,6 +167,8 @@ const CONTRACT_ADDRESS = '0x9621473C88f95589aB21408f773555cf8839E26A';
 export default function Minter() {
   const [gasFee, setGasFee] = useState<bigint | null>(null);
   const [totalCost, setTotalCost] = useState<bigint | null>(null);
+  const [insufficientBalanceOpen, setInsufficientBalanceOpen] = useState(false);
+  const [transactionCompleted, setTransactionCompleted] = useState(false);
   const { address, isConnected } = useAccount();
   const { data: balanceData } = useBalance({
     address,
@@ -184,7 +177,6 @@ export default function Minter() {
 
   const publicClient = usePublicClient({ chainId: baseSepolia.id });
 
-  // const RECEIVER_WALLET_ADDRESS = '0x2990731080E4511D12892F96D5CDa51bF1B9D56c';
   const MINT_PRICE = '0.001';
 
   console.log('balanceData:', balanceData);
@@ -193,8 +185,6 @@ export default function Minter() {
 
   // const link = 'https://ar-io.net/Gme9IFaNz-iSL77u5j0CxQJ1rrjXZgaNOIQwDUocU0Y';
   const { data: txHash, isPending } = useWriteContract();
-
-  // Wait for the transaction receipt
 
   const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({
     hash: txHash,
@@ -210,6 +200,7 @@ export default function Minter() {
   useEffect(() => {
     if (isConfirmed) {
       setStatus('✅ Transaction confirmed! NFT minted successfully.');
+      setTransactionCompleted(true);
     }
   }, [isConfirmed]);
 
@@ -233,10 +224,7 @@ export default function Minter() {
           address: CONTRACT_ADDRESS,
           abi: splitAndMintAbi,
           functionName: 'mint',
-          args: [
-            'Gme9IFaNz-iSL77u5j0CxQJ1rrjXZgaNOIQwDUocU0Y',
-            // RECEIVER_WALLET_ADDRESS,
-          ],
+          args: ['Gme9IFaNz-iSL77u5j0CxQJ1rrjXZgaNOIQwDUocU0Y'],
           value: mintValue,
           account: address,
         });
@@ -276,8 +264,15 @@ export default function Minter() {
       return;
     }
 
+    // Check balance against total cost
+    if (balanceData && totalCost && balanceData.value < totalCost) {
+      setInsufficientBalanceOpen(true);
+      return;
+    }
+
     try {
       setStatus('⏳ Minting in progress...');
+      setTransactionCompleted(false);
 
       const data = encodeFunctionData({
         abi: splitAndMintAbi,
@@ -285,26 +280,15 @@ export default function Minter() {
         args: ['Gme9IFaNz-iSL77u5j0CxQJ1rrjXZgaNOIQwDUocU0Y'],
       });
 
-      // writeContract({
-      //   address: CONTRACT_ADDRESS,
-      //   abi: splitAndMintAbi,
-      //   functionName: 'mint',
-      //   args: [
-      //     'Gme9IFaNz-iSL77u5j0CxQJ1rrjXZgaNOIQwDUocU0Y',
-      //     // RECEIVER_WALLET_ADDRESS,
-      //   ],
-      //   value: parseEther(MINT_PRICE),
-      //   chainId: baseSepolia.id,
-      // });
       const txHash = await provider.request({
         method: 'eth_sendTransaction',
         params: [
           {
-            from: address, // Farcaster-connected address
+            from: address,
             to: CONTRACT_ADDRESS,
             value: toHex(parseEther(MINT_PRICE)),
             data,
-            chainId: toHex(baseSepolia.id), // 0x14a34
+            chainId: toHex(baseSepolia.id),
           },
         ],
       });
@@ -313,35 +297,94 @@ export default function Minter() {
     } catch (err) {
       console.error(err);
       setStatus('❌ Error while minting NFT. Check console for details.');
+      setTransactionCompleted(true);
     }
   };
 
   return (
-    <Box className='relative bg-[#1ab4a3] rounded-lg display:flex justify-center items-center'>
-      <span
-        className='block cursor-pointer font-extrabold text-center text-white px-6 py-3'
-        onClick={handleMint}
-      >
-        {isPending ? 'Minting...' : 'Mint'}
-      </span>
-      <p className='text-white mt-2 text-sm'>Wallet Address: {address}</p>
-      <p className='text-white mt-2 text-sm'>{status}</p>
+    <>
+      <Box className='relative bg-[#1ab4a3] rounded-lg display:flex justify-center items-center'>
+        <span
+          className='block cursor-pointer font-extrabold text-center text-white px-6 py-3'
+          onClick={handleMint}
+        >
+          {isPending ? 'Minting' : transactionCompleted ? 'Mint again' : 'Mint'}
+        </span>
+        <p className='text-white mt-2 text-sm'>Wallet Address: {address}</p>
+        <p className='text-white mt-2 text-sm'>{status}</p>
 
-      {balanceData && (
-        <p className='text-white text-xs'>
-          Balance: {formatEther(balanceData.value)} ETH
-        </p>
-      )}
-      {gasFee && totalCost && (
-        <div className='text-white text-xs mt-3 text-center'>
-          <p>Mint Price: {MINT_PRICE} ETH</p>
-          <p>Estimated Gas: {formatEther(gasFee)} ETH</p>
-          <p className='font-bold'>
-            Total Required: {formatEther(totalCost)} ETH
+        {balanceData && (
+          <p className='text-white text-xs'>
+            Balance: {formatEther(balanceData.value)} ETH
           </p>
-        </div>
-      )}
-      <ETHPrice />
-    </Box>
+        )}
+        {gasFee && totalCost && (
+          <div className='text-white text-xs mt-3 text-center'>
+            <p>Mint Price: {MINT_PRICE} ETH</p>
+            <p>Estimated Gas: {formatEther(gasFee)} ETH</p>
+            <p className='font-bold'>
+              Total Required: {formatEther(totalCost)} ETH
+            </p>
+          </div>
+        )}
+        <ETHPrice />
+      </Box>
+
+      {/* Insufficient Balance Modal */}
+      <Dialog.Root
+        open={insufficientBalanceOpen}
+        onOpenChange={setInsufficientBalanceOpen}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className='fixed inset-0 bg-black/50 z-40' />
+          <Dialog.Content className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg p-6 w-96 max-w-[90%] z-50'>
+            <div className='flex justify-between items-center mb-4'>
+              <Dialog.Title className='text-lg font-bold text-gray-900'>
+                Insufficient Balance
+              </Dialog.Title>
+              <Dialog.Close asChild>
+                <button
+                  className='text-gray-500 hover:text-gray-700 text-xl leading-none'
+                  aria-label='Close'
+                >
+                  ✕
+                </button>
+              </Dialog.Close>
+            </div>
+            <Dialog.Description className='text-gray-700 mb-6'>
+              You have insufficient balance. We need at least{' '}
+              <span className='font-bold'>
+                {totalCost ? formatEther(totalCost) : '0'} ETH
+              </span>{' '}
+              that we detected from estimation contract on Base Network for
+              mint.
+            </Dialog.Description>
+            <div className='mb-6'>
+              {balanceData && (
+                <p className='text-sm text-gray-600'>
+                  Your balance:{' '}
+                  <span className='font-bold'>
+                    {formatEther(balanceData.value)} ETH
+                  </span>
+                </p>
+              )}
+              {totalCost && (
+                <p className='text-sm text-gray-600'>
+                  Required:{' '}
+                  <span className='font-bold'>
+                    {formatEther(totalCost)} ETH
+                  </span>
+                </p>
+              )}
+            </div>
+            <Dialog.Close asChild>
+              <button className='w-full bg-[#1ab4a3] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#0f9a8b] transition'>
+                Close
+              </button>
+            </Dialog.Close>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </>
   );
 }
