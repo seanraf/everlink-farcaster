@@ -387,11 +387,11 @@ export default function Minter() {
                 </p>
               )}
             </div>
-            <Dialog.Close asChild>
+            {/* <Dialog.Close asChild>
               <button className='w-full bg-[#1ab4a3] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#0f9a8b] transition border-none'>
                 Close
               </button>
-            </Dialog.Close>
+            </Dialog.Close> */}
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
