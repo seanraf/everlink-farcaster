@@ -107,7 +107,7 @@ export default function Uploader({
       await axios.put(`${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`, {
         customUrl: latestLink,
         shortUrlId: shortIoId,
-        arweaveUrl: `https://arweave.net/${arweaveTransactionId}`,
+        arweaveUrl: `https://ar-io.net/${arweaveTransactionId}`,
       });
       setLoading(false);
     } catch (error) {

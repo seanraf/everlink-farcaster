@@ -1,13 +1,12 @@
 import { Box } from '../components/Box';
 import Loader from './Loader';
 import type { MinterProps } from '../types';
-// import Minter from '../components/Minter';
-import Minter2 from '../components/Minter2';
-// import Minter from '../components/Minter';
+import Minter from '../components/Minter';
+// import Minter2 from '../components/Minter2';
 
 export default function Mint({
   renderThemePreview,
-  // ipfsTaskId,
+  ipfsTaskId,
   loading,
 }: MinterProps) {
   return (
@@ -48,13 +47,10 @@ export default function Mint({
                 </span>
               </Box>
               <Box className='mx-2 my-1'>
-                {/* <Minter ipfsTaskId={ipfsTaskId} /> */}
+                <Minter ipfsTaskId={ipfsTaskId} />
               </Box>
             </Box>
-            <Minter2 />
-            {/* <MintComponent /> */}
-            <hr />
-            {/* <ConnectMenu /> */}
+            {/* <Minter2 /> */}
           </Box>
           <Box className='flex-1 flex justify-center items-center md:w-[50%]'>
             <Box className='render-theme-minter mb-4 flex md:ml-auto'>
