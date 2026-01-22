@@ -208,30 +208,34 @@ export default function Minter() {
               </Dialog.Title>
             </div>
             <Dialog.Description className='text-gray-700 mb-6'>
-              You have insufficient balance. We need at least{' '}
-              <span className='font-bold'>
-                {totalCost ? formatEther(totalCost) : '0'} ETH
-              </span>{' '}
-              that we detected from estimation contract on Base Network for
-              mint.
+              You have insufficient balance. To mint an NFT, you need at least{' '}
+              <span className='font-bold text-lg'>$5 USD</span> worth of ETH (
+              <span className='font-bold'>{fiveUsdInEth} ETH</span>) on Base
+              Network.
             </Dialog.Description>
-            <div className='mb-6'>
+            <p className='text-sm text-gray-600 mb-6 italic'>
+              This ETH amount is equivalent to 5 USD at the current market rate.
+            </p>
+            <div className='mb-6 space-y-3'>
               {balanceData && (
                 <p className='text-sm text-gray-600'>
                   Your balance:{' '}
-                  <span className='font-bold'>
+                  <span className='font-bold text-red-600'>
                     {formatEther(balanceData.value)} ETH
                   </span>
                 </p>
               )}
               {totalCost && (
                 <p className='text-sm text-gray-600'>
-                  Required:{' '}
-                  <span className='font-bold'>
-                    {formatEther(totalCost)} ETH
+                  Required for mint:{' '}
+                  <span className='font-bold text-green-600'>
+                    {fiveUsdInEth} ETH
                   </span>
                 </p>
               )}
+              <p className='text-sm text-gray-500'>
+                💡 Please add more ETH to your wallet and try again.
+              </p>
             </div>
             <Dialog.Close asChild>
               <button className='w-full bg-[#1ab4a3] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#0f9a8b] transition border-none'>
