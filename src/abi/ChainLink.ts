@@ -1,19 +1,4 @@
-// export const chainlinkAbi = [
-//   {
-//     name: 'latestRoundData',
-//     type: 'function',
-//     stateMutability: 'view',
-//     inputs: [],
-//     outputs: [
-//       { name: 'roundId', type: 'uint80' },
-//       { name: 'answer', type: 'int256' },
-//       { name: 'startedAt', type: 'uint256' },
-//       { name: 'updatedAt', type: 'uint256' },
-//       { name: 'answeredInRound', type: 'uint80' },
-//     ],
-//   },
-// ];
-export const chainlinkAbi = [
+export const chainLinkAbi = [
   {
     inputs: [
       { internalType: 'address', name: '_aggregator', type: 'address' },
