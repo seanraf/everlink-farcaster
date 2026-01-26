@@ -36,6 +36,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   const [mintTransactionHash, setMintTransactionHash] = useState<string | null>(
     null
   );
+  const [status, setStatus] = useState<string | null>(null);
   const { address, isConnected } = useAccount();
   const { data: balanceData } = useBalance({
     address,
@@ -52,8 +53,6 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   const fiveUsdInEth = currentEthPrice
     ? (5 / currentEthPrice).toFixed(6)
     : '0.0018';
-
-  const [status, setStatus] = useState<string | null>(null);
 
   useEffect(() => {
     if (status) {
@@ -205,7 +204,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
 
     calculateCost();
   }, [publicClient, address, arweaveTransactionId, mintPriceEth]);
-
+  console.log('status:', status);
   const handleMint = async () => {
     await sdk.actions.ready();
 
@@ -227,6 +226,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
     }
 
     if (balanceData && totalCost && balanceData.value < totalCost) {
+      console.log(balanceData.value, totalCost);
       setInsufficientBalanceOpen(true);
       return;
     }
