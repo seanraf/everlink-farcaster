@@ -37,6 +37,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
     null
   );
   const [status, setStatus] = useState<string | null>(null);
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
   const { address, isConnected } = useAccount();
   const { data: balanceData } = useBalance({
     address,
@@ -57,6 +58,10 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   useEffect(() => {
     if (status) {
       console.log('Status:', status);
+      // Open modal if status is an error or warning
+      if (status.includes('⚠️') || status.includes('❌')) {
+        setStatusModalOpen(true);
+      }
     }
   }, [status]);
 
@@ -362,6 +367,32 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
             </p>
             <Dialog.Close asChild>
               <button className='w-full bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition border-none'>
+                Close
+              </button>
+            </Dialog.Close>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+
+      {/* Status Modal - Shows errors and warnings */}
+      <Dialog.Root open={statusModalOpen} onOpenChange={setStatusModalOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className='fixed inset-0 bg-black/50 z-40 display:flex justify-center items-center' />
+          <Dialog.Content className='fixed top-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg p-6 max-w-[90%] z-50 left-0 right-0 mx-auto w-full max-w-md'>
+            <div className='flex justify-between items-center mb-4'>
+              <Dialog.Title
+                className={`text-lg font-bold ${
+                  status?.includes('❌') ? 'text-red-600' : 'text-yellow-600'
+                }`}
+              >
+                {status?.includes('❌') ? '❌ Error' : '⚠️ Alert'}
+              </Dialog.Title>
+            </div>
+            <Dialog.Description className='text-gray-700 mb-6'>
+              {status}
+            </Dialog.Description>
+            <Dialog.Close asChild>
+              <button className='w-full bg-[#1ab4a3] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#0f9a8b] transition border-none'>
                 Close
               </button>
             </Dialog.Close>
