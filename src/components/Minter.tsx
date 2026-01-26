@@ -22,6 +22,7 @@ const CONTRACT_ADDRESS = '0x9621473C88f95589aB21408f773555cf8839E26A';
 
 export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   const backendBaseUrl = import.meta.env.VITE_BACKEND_BASE_URL as string;
+  const frontendBaseUrl = import.meta.env.VITE_FRONTEND_BASE_URL as string;
 
   const [totalCost, setTotalCost] = useState<bigint | null>(null);
   const [insufficientBalanceOpen, setInsufficientBalanceOpen] = useState(false);
@@ -121,18 +122,24 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
       setStatus('✅ Transaction confirmed! NFT minted successfully.');
       setTransactionCompleted(true);
 
-      // Save transaction hash to database
       const saveTransactionToDb = async () => {
         if (!mintTransactionHash || !ipfsTaskId) return;
 
         try {
-          await axios.put(
-            `${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`,
-            {
-              txHash: mintTransactionHash,
-            }
-          );
+          // await axios.put(
+          //   `${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`,
+          //   {
+          //     txHash: mintTransactionHash,
+          //   }
+          // );
           console.log('Transaction hash saved to database successfully');
+
+          const successUrl = `${frontendBaseUrl}/success/${ipfsTaskId}`;
+          console.log('Navigating to:', successUrl);
+
+          setTimeout(() => {
+            window.location.href = successUrl;
+          }, 2000);
         } catch (error) {
           console.error('Error saving transaction hash to database:', error);
           setStatus(
@@ -143,7 +150,13 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
 
       saveTransactionToDb();
     }
-  }, [isConfirmed, mintTransactionHash, ipfsTaskId, backendBaseUrl]);
+  }, [
+    isConfirmed,
+    mintTransactionHash,
+    ipfsTaskId,
+    backendBaseUrl,
+    frontendBaseUrl,
+  ]);
 
   useEffect(() => {
     const fetchBalance = async () => {
