@@ -36,6 +36,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   const [mintTransactionHash, setMintTransactionHash] = useState<string | null>(
     null
   );
+  const [savedToDb, setSavedToDb] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const { address, isConnected } = useAccount();
@@ -121,38 +122,47 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
     fetchDeploymentData();
   }, [ipfsTaskId, backendBaseUrl]);
 
+  const saveTransactionAndNavigate = async (txHashParam?: string) => {
+    const tx = txHashParam || mintTransactionHash;
+    if (!tx || !ipfsTaskId) return false;
+
+    try {
+      await axios.put(`${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`, {
+        txHash: tx,
+      });
+      console.log('Transaction hash saved to database successfully');
+      setSavedToDb(true);
+
+      const successUrl = `${frontendBaseUrl}/success/${ipfsTaskId}`;
+      console.log('Navigating to:', successUrl);
+
+      // brief delay so the user sees the success message
+      setTimeout(() => {
+        window.location.href = successUrl;
+      }, 2000);
+
+      return true;
+    } catch (error) {
+      console.error('Error saving transaction hash to database:', error);
+      setStatus(
+        '✅ NFT minted but failed to save transaction data. Please contact support.'
+      );
+      setStatusModalOpen(true);
+      return false;
+    }
+  };
+
   useEffect(() => {
     if (isConfirmed) {
       setStatus('✅ Transaction confirmed! NFT minted successfully.');
       setTransactionCompleted(true);
 
-      const saveTransactionToDb = async () => {
-        if (!mintTransactionHash || !ipfsTaskId) return;
-
-        try {
-          await axios.put(
-            `${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`,
-            {
-              txHash: mintTransactionHash,
-            }
-          );
-          console.log('Transaction hash saved to database successfully');
-
-          const successUrl = `${frontendBaseUrl}/success/${ipfsTaskId}`;
-          console.log('Navigating to:', successUrl);
-
-          setTimeout(() => {
-            window.location.href = successUrl;
-          }, 2000);
-        } catch (error) {
-          console.error('Error saving transaction hash to database:', error);
-          setStatus(
-            '✅ NFT minted but failed to save transaction data. Please contact support.'
-          );
-        }
-      };
-
-      saveTransactionToDb();
+      // Fallback: save if not already saved by handleMint
+      if (!savedToDb) {
+        (async () => {
+          await saveTransactionAndNavigate();
+        })();
+      }
     }
   }, [
     isConfirmed,
@@ -160,6 +170,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
     ipfsTaskId,
     backendBaseUrl,
     frontendBaseUrl,
+    savedToDb,
   ]);
 
   useEffect(() => {
@@ -266,6 +277,12 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
 
       setMintTransactionHash(txHash);
       setStatus(`✅ Mint submitted! Tx: ${txHash}`);
+
+      try {
+        await saveTransactionAndNavigate(txHash);
+      } catch (e) {
+        console.warn('saveTransactionAndNavigate failed (handleMint):', e);
+      }
     } catch (err) {
       console.error(err);
       setStatus('❌ Error while minting NFT. Check console for details.');
