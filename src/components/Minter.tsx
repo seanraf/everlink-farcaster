@@ -133,7 +133,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
       console.log('Transaction hash saved to database successfully');
       setSavedToDb(true);
 
-      const successUrl = `${frontendBaseUrl}/success/${ipfsTaskId}`;
+      const successUrl = `${frontendBaseUrl}/#/success?id=${ipfsTaskId}`;
       console.log('Navigating to:', successUrl);
 
       // brief delay so the user sees the success message

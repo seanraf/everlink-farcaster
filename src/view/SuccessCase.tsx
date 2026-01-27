@@ -4,6 +4,7 @@ import { Box } from '../components/Box';
 import Loader from './Loader';
 import ThankYou from './ThankYou';
 import type { DeploymentRecord } from '../types';
+import { useSearchParams } from 'react-router-dom';
 
 export default function SuccessCase() {
   const backendBaseUrl = import.meta.env.VITE_BACKEND_BASE_URL as string;
@@ -13,7 +14,10 @@ export default function SuccessCase() {
   const [customURL, setCustomURL] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const pathname = window.location.pathname;
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get('id');
+
+  // const pathname = window.location.pathname;
   const fetchDeploymentData = async () => {
     try {
       const response = await axios.get(
@@ -36,14 +40,19 @@ export default function SuccessCase() {
   };
 
   useEffect(() => {
-    if (pathname) {
-      const pathSegments = pathname.split('/');
-      const successIndex = pathSegments.indexOf('success');
-      if (successIndex !== -1 && pathSegments.length > successIndex + 1) {
-        setIpfsTaskId(pathSegments[successIndex + 1]);
-      }
+    if (id) {
+      setIpfsTaskId(id);
     }
-  }, [pathname]);
+  }, [id]);
+  // useEffect(() => {
+  //   if (pathname) {
+  //     const pathSegments = pathname.split('/');
+  //     const successIndex = pathSegments.indexOf('success');
+  //     if (successIndex !== -1 && pathSegments.length > successIndex + 1) {
+  //       setIpfsTaskId(pathSegments[successIndex + 1]);
+  //     }
+  //   }
+  // }, [pathname]);
 
   useEffect(() => {
     if (ipfsTaskId) {
