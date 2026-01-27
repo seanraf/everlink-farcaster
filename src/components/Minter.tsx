@@ -130,12 +130,12 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
         if (!mintTransactionHash || !ipfsTaskId) return;
 
         try {
-          // await axios.put(
-          //   `${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`,
-          //   {
-          //     txHash: mintTransactionHash,
-          //   }
-          // );
+          await axios.put(
+            `${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`,
+            {
+              txHash: mintTransactionHash,
+            }
+          );
           console.log('Transaction hash saved to database successfully');
 
           const successUrl = `${frontendBaseUrl}/success/${ipfsTaskId}`;
