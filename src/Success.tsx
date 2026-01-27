@@ -1,7 +1,5 @@
 import SuccessCase from './view/SuccessCase';
 
-const Success = () => {
+export default function Success() {
   return <SuccessCase />;
-};
-
-export default Success;
+}
