@@ -9,7 +9,7 @@ import {
 } from 'wagmi';
 import axios from 'axios';
 import { Box } from './Box';
-import { baseSepolia } from 'wagmi/chains';
+import { base } from 'wagmi/chains';
 import { sdk } from '@farcaster/miniapp-sdk';
 import miniAppSdk from '@farcaster/miniapp-sdk';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -18,7 +18,8 @@ import { splitAndMintAbi } from '../abi/splitAndMint';
 import { formatEther, parseEther, encodeFunctionData, toHex } from 'viem';
 import Loader from '../view/Loader';
 
-const CONTRACT_ADDRESS = '0x9621473C88f95589aB21408f773555cf8839E26A';
+// const CONTRACT_ADDRESS = '0x9621473C88f95589aB21408f773555cf8839E26A';
+const CONTRACT_ADDRESS = '0xB6aa51bE08Fb1CAb7f06E7Fd2De35c4aCE78Ce5C';
 
 export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   const backendBaseUrl = import.meta.env.VITE_BACKEND_BASE_URL as string;
@@ -42,11 +43,11 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   const { address, isConnected } = useAccount();
   const { data: balanceData } = useBalance({
     address,
-    chainId: baseSepolia.id,
+    chainId: base.id,
   });
   console.log('IPFS Task ID in Minter:', ipfsTaskId);
   console.log('arweaveTransactionId in Minter:', arweaveTransactionId);
-  const publicClient = usePublicClient({ chainId: baseSepolia.id });
+  const publicClient = usePublicClient({ chainId: base.id });
   const currentEthPrice = useEthPrice();
 
   const mintPriceEth = currentEthPrice
@@ -270,7 +271,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
             to: CONTRACT_ADDRESS,
             value: toHex(parseEther(mintPriceEth)),
             data,
-            chainId: toHex(baseSepolia.id),
+            chainId: toHex(base.id),
           },
         ],
       });
