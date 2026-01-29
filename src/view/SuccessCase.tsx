@@ -17,7 +17,6 @@ export default function SuccessCase() {
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
 
-  // const pathname = window.location.pathname;
   const fetchDeploymentData = async () => {
     try {
       const response = await axios.get(
@@ -44,15 +43,6 @@ export default function SuccessCase() {
       setIpfsTaskId(id);
     }
   }, [id]);
-  // useEffect(() => {
-  //   if (pathname) {
-  //     const pathSegments = pathname.split('/');
-  //     const successIndex = pathSegments.indexOf('success');
-  //     if (successIndex !== -1 && pathSegments.length > successIndex + 1) {
-  //       setIpfsTaskId(pathSegments[successIndex + 1]);
-  //     }
-  //   }
-  // }, [pathname]);
 
   useEffect(() => {
     if (ipfsTaskId) {

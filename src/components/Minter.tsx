@@ -18,10 +18,9 @@ import { splitAndMintAbi } from '../abi/splitAndMint';
 import { formatEther, parseEther, encodeFunctionData, toHex } from 'viem';
 import Loader from '../view/Loader';
 
-// const CONTRACT_ADDRESS = '0x9621473C88f95589aB21408f773555cf8839E26A';
-const CONTRACT_ADDRESS = '0xB6aa51bE08Fb1CAb7f06E7Fd2De35c4aCE78Ce5C';
-
 export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
+  const mintSmartContractAddress = import.meta.env
+    .VITE_NFT_MINT_SMART_CONTRACT_ADDRESS as `0x${string}`;
   const backendBaseUrl = import.meta.env.VITE_BACKEND_BASE_URL as string;
   const frontendBaseUrl = import.meta.env.VITE_FRONTEND_BASE_URL as string;
 
@@ -45,8 +44,6 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
     address,
     chainId: base.id,
   });
-  console.log('IPFS Task ID in Minter:', ipfsTaskId);
-  console.log('arweaveTransactionId in Minter:', arweaveTransactionId);
   const publicClient = usePublicClient({ chainId: base.id });
   const currentEthPrice = useEthPrice();
 
@@ -60,7 +57,6 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
   useEffect(() => {
     if (status) {
       console.log('Status:', status);
-      // Open modal if status is an error or warning
       if (status.includes('⚠️') || status.includes('❌')) {
         setStatusModalOpen(true);
       }
@@ -90,15 +86,10 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
         const response = await axios.get(
           `${backendBaseUrl}/api/deploymentHistory/${ipfsTaskId}`
         );
-        console.log('Deployment data response:', response.data);
         const deploymentRecords = response.data.records;
 
         if (deploymentRecords?.arweaveTransactionId) {
           setArweaveTransactionId(deploymentRecords.arweaveTransactionId);
-          console.log(
-            'Arweave Transaction ID:',
-            deploymentRecords.arweaveTransactionId
-          );
         } else {
           const errorMsg =
             'No arweave transaction ID found in deployment records.';
@@ -137,7 +128,6 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
       const successUrl = `${frontendBaseUrl}/#/success?id=${ipfsTaskId}`;
       console.log('Navigating to:', successUrl);
 
-      // brief delay so the user sees the success message
       setTimeout(() => {
         window.location.href = successUrl;
       }, 2000);
@@ -158,7 +148,6 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
       setStatus('✅ Transaction confirmed! NFT minted successfully.');
       setTransactionCompleted(true);
 
-      // Fallback: save if not already saved by handleMint
       if (!savedToDb) {
         (async () => {
           await saveTransactionAndNavigate();
@@ -193,7 +182,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
         let estimatedGas;
         try {
           estimatedGas = await publicClient.estimateContractGas({
-            address: CONTRACT_ADDRESS,
+            address: mintSmartContractAddress,
             abi: splitAndMintAbi,
             functionName: 'mint',
             args: [
@@ -268,7 +257,7 @@ export default function Minter({ ipfsTaskId }: { ipfsTaskId: string }) {
         params: [
           {
             from: address,
-            to: CONTRACT_ADDRESS,
+            to: mintSmartContractAddress,
             value: toHex(parseEther(mintPriceEth)),
             data,
             chainId: toHex(base.id),
